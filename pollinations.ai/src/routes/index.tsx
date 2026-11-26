@@ -11,6 +11,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useRequestsLastHour } from "../data/publicStats";
 import { routeHead } from "../routeMeta";
+import { QuestLeaderboard } from "../ui/components/QuestLeaderboard";
 import { DevKit } from "../ui/home/DevKit";
 import { LiveApps } from "../ui/home/LiveApps";
 import { MoneyMoves } from "../ui/home/MoneyMoves";
@@ -29,9 +30,9 @@ function HelloPage() {
             {/* Polli herself opens the site — the one the brand already had. */}
             <HeroScene page="home" wide>
                 <ContentHeader
-                    eyebrow="Open infrastructure for AI-natives"
-                    title="Models. Agents. Tools. One API."
-                    subtitle="The AI-native builder community. Generate images, video, speech, music and text. Build agents and apps."
+                    eyebrow="AI 네이티브를 위한 오픈 인프라"
+                    title="모델. 에이전트. 도구. 하나의 API."
+                    subtitle="AI 네이티브 빌더 커뮤니티. 이미지, 영상, 음성, 음악, 텍스트를 생성하고 에이전트와 앱을 만드세요."
                     variant="page"
                     className="[&_h1]:text-balance sm:[&_h1]:max-w-[18ch]"
                 />
@@ -42,7 +43,7 @@ function HelloPage() {
                         size="lg"
                         icon={<RocketIcon className="size-4 shrink-0" />}
                     >
-                        Get an API key
+                        API 키 받기
                     </ExternalLinkButton>
                     <InlineLink
                         href="https://gen.pollinations.ai/docs#tag/quick-start"
@@ -52,7 +53,7 @@ function HelloPage() {
                             aria-hidden="true"
                             className="size-4 shrink-0"
                         />
-                        Quick start
+                        빠른 시작
                     </InlineLink>
                 </div>
                 <RequestsLastHour />
@@ -60,6 +61,7 @@ function HelloPage() {
 
             <DevKit className={postHeroSpacingClassName} />
             <MoneyMoves />
+            <QuestLeaderboard />
             <LiveApps />
             <StartBuilding />
             <BottomScene page="home" />
@@ -93,7 +95,7 @@ function RequestsLastHour() {
                     }
                     label={
                         <>
-                            requests in the last hour
+                            지난 1시간 요청 수
                             <LiveDot />
                         </>
                     }

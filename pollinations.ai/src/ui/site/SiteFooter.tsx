@@ -4,29 +4,29 @@ import { DOCS_URL, SOCIAL } from "./links";
 
 const COLUMNS = [
     {
-        heading: "Build",
+        heading: "빌드",
         links: [
-            { href: DOCS_URL, label: "Docs" },
-            { href: "https://enter.pollinations.ai/models", label: "Models" },
-            { href: "https://enter.pollinations.ai", label: "Dashboard" },
+            { href: DOCS_URL, label: "문서" },
+            { href: "https://enter.pollinations.ai/models", label: "모델" },
+            { href: "https://enter.pollinations.ai", label: "대시보드" },
         ],
     },
     {
-        heading: "Explore",
+        heading: "둘러보기",
         links: [
-            { to: "/", label: "Hello" },
-            { to: "/apps", label: "Apps" },
-            { to: "/play", label: "Play" },
-            { to: "/community", label: "Community" },
+            { to: "/", label: "홈" },
+            { to: "/apps", label: "앱" },
+            { to: "/play", label: "플레이" },
+            { to: "/community", label: "커뮤니티" },
         ],
     },
     {
-        heading: "Project",
+        heading: "프로젝트",
         links: [
-            { to: "/privacy", label: "Privacy" },
-            { to: "/terms", label: "Terms" },
+            { to: "/privacy", label: "개인정보" },
+            { to: "/terms", label: "이용약관" },
             // Payment providers generally require this to be reachable.
-            { to: "/refunds", label: "Refunds" },
+            { to: "/refunds", label: "환불" },
         ],
     },
 ] as const;
@@ -39,13 +39,13 @@ export function SiteFooter() {
                     <BrandMark className="size-11 text-theme-text-strong" />
                     <p className="text-sm text-theme-text-muted">
                         <span className="block">
-                            Open infrastructure for AI builders
+                            AI 빌더를 위한 오픈 인프라
                         </span>
                         <span className="block">
-                            Built with the community, in the open
+                            커뮤니티와 함께, 공개적으로 만듭니다
                         </span>
                     </p>
-                    <nav aria-label="Social links" className="flex gap-1">
+                    <nav aria-label="소셜 링크" className="flex gap-1">
                         {SOCIAL.map(({ href, label, Icon }) => (
                             <IconButton
                                 key={href}
@@ -66,7 +66,7 @@ export function SiteFooter() {
                             Estonia
                         </span>
                         <span className="block">
-                            Payments by Stripe ·{" "}
+                            Stripe 결제 ·{" "}
                             <InlineLink
                                 href="mailto:hello@pollinations.ai"
                                 tone="quiet"

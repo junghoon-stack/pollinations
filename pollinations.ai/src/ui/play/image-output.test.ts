@@ -19,9 +19,9 @@ describe("image output selection", () => {
     it.each(["png", "svg"] as const)(
         "keeps the edit action for %s output",
         (format) => {
-            expect(imageActionLabel(true, format)).toBe("Edit image");
+            expect(imageActionLabel(true, format)).toBe("이미지 편집");
             expect(imageActionLabel(false, format)).toBe(
-                `Generate ${format.toUpperCase()}`,
+                `${format.toUpperCase()} 생성`,
             );
         },
     );
@@ -95,7 +95,7 @@ describe("returned image", () => {
             expect(result.filename).toBe("pollinations-playground.jpg");
             expect(result.formatLabel).toBe("JPEG");
             expect(result.notice).toBe(
-                "Requested WebP. The model returned JPEG.",
+                "요청한 형식은 WebP이고, 모델은 JPEG을 반환했습니다.",
             );
             const preview = await fetch(result.url);
             expect(preview.headers.get("Content-Type")).toBe("image/jpeg");
@@ -125,7 +125,9 @@ describe("returned image", () => {
             try {
                 expect(result.type).toBe("file");
                 expect(result.filename).toBe("pollinations-playground.bin");
-                expect(result.notice).toContain("Preview unavailable.");
+                expect(result.notice).toContain(
+                    "미리보기를 표시할 수 없습니다.",
+                );
                 const download = await fetch(result.url);
                 expect(download.headers.get("Content-Type")).toBe(
                     "application/octet-stream",

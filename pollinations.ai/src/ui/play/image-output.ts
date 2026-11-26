@@ -36,7 +36,7 @@ export function previewImageFormats(
 
 export function imageFormatLabel(value: string) {
     if (value === "webp") return "WebP";
-    if (value === "still") return "Model default";
+    if (value === "still") return "모델 기본값";
     return value.toUpperCase();
 }
 
@@ -52,8 +52,8 @@ const formats = Object.keys(imageMime) as Format[];
 const requestFormats = ["png", "webp", "gif"] as const;
 
 export function imageActionLabel(editsImage: boolean, format?: Format) {
-    if (editsImage) return "Edit image";
-    return format ? `Generate ${format.toUpperCase()}` : "Generate image";
+    if (editsImage) return "이미지 편집";
+    return format ? `${format.toUpperCase()} 생성` : "이미지 생성";
 }
 
 /** Keep the returned image and use its media type for the preview and download. */
@@ -70,8 +70,8 @@ export function imageResult(
             ),
             filename: "pollinations-playground.bin",
             notice: mime
-                ? `Preview unavailable. The model returned ${mime}.`
-                : "Preview unavailable. The response has no media type.",
+                ? `미리보기를 표시할 수 없습니다. 모델이 ${mime}을 반환했습니다.`
+                : "미리보기를 표시할 수 없습니다. 응답에 미디어 타입이 없습니다.",
         };
     }
     const actual = formats.find((key) => imageMime[key] === mime);
@@ -84,7 +84,7 @@ export function imageResult(
         formatLabel: label,
         notice:
             expected && expected !== actual
-                ? `Requested ${imageFormatLabel(expected)}. The model returned ${label ?? mime}.`
+                ? `요청한 형식은 ${imageFormatLabel(expected)}이고, 모델은 ${label ?? mime}을 반환했습니다.`
                 : undefined,
     };
 }

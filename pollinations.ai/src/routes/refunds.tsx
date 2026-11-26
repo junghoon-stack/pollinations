@@ -7,7 +7,7 @@ export const Route = createFileRoute("/refunds")({
     component: () => (
         <LegalPage
             markdownPath="/legal/REFUNDS_AND_CANCELLATIONS.md"
-            errorLabel="refunds policy"
+            errorLabel="환불 및 취소 정책"
         />
     ),
 });

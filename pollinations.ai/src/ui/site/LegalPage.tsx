@@ -50,10 +50,10 @@ export function LegalPage({ markdownPath, errorLabel }: LegalPageProps) {
         <article className="flex max-w-3xl flex-col gap-6 max-sm:pt-12">
             {failed ? (
                 <p className="text-theme-text-base">
-                    The {errorLabel} could not be loaded. Please try again.
+                    {errorLabel}을 불러오지 못했습니다. 다시 시도해 주세요.
                 </p>
             ) : markdown === null ? (
-                <p className="text-theme-text-muted">Loading…</p>
+                <p className="text-theme-text-muted">불러오는 중…</p>
             ) : (
                 <>
                     {title ? (

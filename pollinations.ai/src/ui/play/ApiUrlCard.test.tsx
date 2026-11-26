@@ -9,8 +9,8 @@ describe("API URL card", () => {
             const url = `https://gen.pollinations.ai/${category}/hello%20%26%20world?model=vendor%2Fmodel&voice=nova&key=YOUR_API_KEY`;
             const html = renderToStaticMarkup(<ApiUrlCard url={url} />);
             expect(apiExample(url)).toBe(url);
-            expect(html).toContain("API quickstart");
-            expect(html).toContain("Copy API example");
+            expect(html).toContain("API 빠른 시작");
+            expect(html).toContain("API 예제 복사");
         },
     );
 
@@ -75,6 +75,6 @@ describe("API URL card", () => {
             <ApiUrlCard url={endpoint} pendingMessage="Complete the form." />,
         );
         expect(pending).toContain("Complete the form.");
-        expect(pending).not.toContain("Copy API example");
+        expect(pending).not.toContain("API 예제 복사");
     });
 });

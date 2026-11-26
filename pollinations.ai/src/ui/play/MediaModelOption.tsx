@@ -27,7 +27,7 @@ export function MediaModelOption({
                 <span className="truncate">{model.title}</span>
                 {isNewModel(model.addedDate) && (
                     <Chip intent="success" size="sm" className="play-model-new">
-                        New
+                        신규
                     </Chip>
                 )}
             </span>
@@ -35,17 +35,15 @@ export function MediaModelOption({
                 <span className="inline-flex shrink-0 items-center text-xs font-normal tabular-nums text-theme-text-muted">
                     <span
                         title={
-                            perDollar && perDollar !== "Free"
-                                ? "Estimated requests per $1, based on the median cost of successful paid requests over the last 7 days."
+                            perDollar && perDollar !== "무료"
+                                ? "최근 7일간 성공한 유료 요청의 중간 비용을 기준으로 한 $1당 예상 요청 수입니다."
                                 : undefined
                         }
                     >
                         {perDollar ?? (
                             <>
                                 <span aria-hidden="true">—</span>
-                                <span className="sr-only">
-                                    Estimate unavailable
-                                </span>
+                                <span className="sr-only">예상값 없음</span>
                             </>
                         )}
                     </span>
@@ -53,8 +51,8 @@ export function MediaModelOption({
                         role="img"
                         aria-label={
                             model.paidOnly
-                                ? "Uses paid balance only"
-                                : "Works with any balance"
+                                ? "유료 잔액만 사용"
+                                : "모든 잔액 사용 가능"
                         }
                         className="inline-flex w-9 justify-center"
                     >

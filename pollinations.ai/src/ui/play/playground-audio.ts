@@ -60,25 +60,26 @@ export function audioInputError(
     file?: File,
 ): string | null {
     const endpoint = audioEndpoint(model);
-    if (!endpoint) return "This audio endpoint is not supported in Play yet.";
+    if (!endpoint)
+        return "이 오디오 엔드포인트는 아직 플레이그라운드에서 지원하지 않습니다.";
     const generatesAudio =
         endpoint === "/v1/audio/speech" || endpoint === "/audio/{text}";
     if (!generatesAudio && !file)
         return model.inputModalities.includes("video")
-            ? "Upload an audio or video file first."
-            : "Upload an audio file first.";
+            ? "먼저 오디오나 비디오 파일을 올려 주세요."
+            : "먼저 오디오 파일을 올려 주세요.";
     if (generatesAudio && !prompt.trim())
-        return "Add text or a description first.";
+        return "먼저 텍스트나 설명을 입력하세요.";
     if (
         generatesAudio &&
         !file &&
         model.inputModalities.includes("video") &&
         !model.inputModalities.includes("audio")
     )
-        return "Upload a video first.";
+        return "먼저 비디오를 올려 주세요.";
     const kind = file && isVideo(file) ? "video" : "audio";
     if (generatesAudio && file && !model.inputModalities.includes(kind))
-        return `This model does not accept reference ${kind}.`;
+        return `이 모델은 참조 ${kind === "video" ? "비디오" : "오디오"}를 받지 않습니다.`;
     return null;
 }
 
@@ -147,7 +148,7 @@ export async function generatePlaygroundAudio(
                 ? language?.trim() || undefined
                 : undefined,
         });
-        return { type: "text", text: result.text || "No transcript" };
+        return { type: "text", text: result.text || "전사 결과가 없습니다" };
     }
     if (
         (endpoint === "/v1/audio/voice-changer" ||
@@ -200,22 +201,22 @@ export function audioConstraintError(
 ) {
     if (!rules || !files.length) return null;
     if (rules.requires_reference_visual && !hasVisual)
-        return "Add a reference image or video with the audio.";
+        return "오디오와 함께 참조 이미지나 비디오를 추가하세요.";
     if (!rules.min_seconds && !rules.max_seconds && !rules.max_total_seconds)
         return null;
     let total = 0;
     for (const file of files) {
         const seconds = durations.get(file);
-        if (seconds === undefined) return "Reading clip duration…";
+        if (seconds === undefined) return "클립 길이를 읽는 중…";
         // The API can decode formats the browser cannot preview.
         if (seconds === null) continue;
         if (rules.min_seconds && seconds < rules.min_seconds)
-            return `${file.name} must be at least ${rules.min_seconds} seconds long.`;
+            return `${file.name}은(는) ${rules.min_seconds}초 이상이어야 합니다.`;
         if (rules.max_seconds && seconds > rules.max_seconds)
-            return `${file.name} must be at most ${rules.max_seconds} seconds long.`;
+            return `${file.name}은(는) ${rules.max_seconds}초 이하여야 합니다.`;
         total += seconds;
     }
     return rules.max_total_seconds && total > rules.max_total_seconds
-        ? `Use at most ${rules.max_total_seconds} seconds of audio in total.`
+        ? `오디오는 전체 ${rules.max_total_seconds}초까지만 사용할 수 있습니다.`
         : null;
 }

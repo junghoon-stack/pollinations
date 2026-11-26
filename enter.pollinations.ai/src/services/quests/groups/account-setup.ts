@@ -16,6 +16,8 @@ import {
  *                          into another account's GitHub-linked app)
  *   - connect_polli_cli -> apikey.byop_client_key_id (Polli device login,
  *                          account 3+ days old)
+ *   - connect_google -> account.provider_id       (a linked Google account)
+ *   - create_app_key -> apikey.prefix             (one publishable app key)
  *   - early_adopter  -> user.created_at           (registered 9+ months ago)
  *   - top_up_since_launch -> stripe_checkout_credits (one launch-era checkout)
  *   - top_up_100_since_launch -> stripe_checkout_credits (>=100 launch-era Pollen)
@@ -50,7 +52,7 @@ const firstApiKeyQuest: QuestDefinition = {
     description: "Create an API [key](/keys).",
     category: "setup",
     scope: "perUser",
-    rewardAmount: 0.25,
+    rewardAmount: 0.75,
     balanceBucket: "tier",
 };
 
@@ -61,7 +63,7 @@ const byopLoginQuest: QuestDefinition = {
         "Connect to a Pollinations app. Log in to any app in the [apps directory](https://pollinations.ai/apps) that supports it.",
     category: "setup",
     scope: "perUser",
-    rewardAmount: 0.25,
+    rewardAmount: 0.75,
     balanceBucket: "tier",
 };
 
@@ -75,7 +77,29 @@ const connectPolliCliQuest: QuestDefinition = {
         "Install the [Polli CLI](https://www.npmjs.com/package/@pollinations/cli), run `polli auth login` and approve it in your browser. Logging in with an existing key (`--with-token`) doesn't count. Your account must be at least 3 days old.",
     category: "setup",
     scope: "perUser",
-    rewardAmount: 1,
+    rewardAmount: 5,
+    balanceBucket: "tier",
+};
+
+const connectGoogleQuest: QuestDefinition = {
+    id: "connect_google",
+    title: "Connect Google",
+    description:
+        "Link a Google account on your [account page](/account) so you can sign in either way.",
+    category: "setup",
+    scope: "perUser",
+    rewardAmount: 0.5,
+    balanceBucket: "tier",
+};
+
+const createAppKeyQuest: QuestDefinition = {
+    id: "create_app_key",
+    title: "Create an app key",
+    description:
+        "Create a publishable app key (`pk_`) on your [keys page](/keys). Apps use it to sign users in with Pollinations.",
+    category: "setup",
+    scope: "perUser",
+    rewardAmount: 0.5,
     balanceBucket: "tier",
 };
 
@@ -157,6 +181,8 @@ const QUESTS = [
     firstApiKeyQuest,
     byopLoginQuest,
     connectPolliCliQuest,
+    connectGoogleQuest,
+    createAppKeyQuest,
     earlyAdopterQuest,
     legacyFirstTopUpQuest,
     legacyOverHundredPollenQuest,
@@ -169,6 +195,8 @@ const EVALUATED_QUESTS = [
     firstApiKeyQuest,
     byopLoginQuest,
     connectPolliCliQuest,
+    connectGoogleQuest,
+    createAppKeyQuest,
     earlyAdopterQuest,
     topUpSinceLaunchQuest,
     overHundredPollenSinceLaunchQuest,
@@ -193,6 +221,8 @@ export async function evaluateUser(
         topUpSummaryRows,
         byopLoginRows,
         polliCliRows,
+        googleRows,
+        appKeyRows,
         earlyAdopterRows,
         autoTopUpRows,
     ] = await Promise.all([
@@ -248,6 +278,22 @@ export async function evaluateUser(
           AND "user".created_at <= CAST(strftime('%s', 'now', '-3 days') AS integer)
         LIMIT 1`)
             : [],
+        rewardableQuestIds.has(connectGoogleQuest.id)
+            ? db.all<SetupQuestRow>(sql`
+        SELECT account.user_id AS userId
+        FROM account
+        WHERE account.user_id = ${user.id}
+          AND account.provider_id = 'google'
+        LIMIT 1`)
+            : [],
+        rewardableQuestIds.has(createAppKeyQuest.id)
+            ? db.all<SetupQuestRow>(sql`
+        SELECT apikey.user_id AS userId
+        FROM apikey
+        WHERE apikey.user_id = ${user.id}
+          AND apikey.prefix = 'pk'
+        LIMIT 1`)
+            : [],
         rewardableQuestIds.has(earlyAdopterQuest.id)
             ? db.all<SetupQuestRow>(sql`
         SELECT "user".id AS userId
@@ -281,6 +327,14 @@ export async function evaluateUser(
         })),
         ...polliCliRows.map((row) => ({
             quest: connectPolliCliQuest,
+            userId: row.userId,
+        })),
+        ...googleRows.map((row) => ({
+            quest: connectGoogleQuest,
+            userId: row.userId,
+        })),
+        ...appKeyRows.map((row) => ({
+            quest: createAppKeyQuest,
             userId: row.userId,
         })),
         ...earlyAdopterRows.map((row) => ({

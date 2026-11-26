@@ -54,8 +54,8 @@ export const Route = createFileRoute("/apps")({
 });
 
 const SORT_LABELS: Record<AppSort, string> = {
-    fresh: "New",
-    buzz: "Popular",
+    fresh: "최신",
+    buzz: "인기",
 };
 
 const SORT_ICONS = {
@@ -99,7 +99,7 @@ function FilterAxis<T extends string>({
                 active={selected === undefined}
                 onClick={onClear}
             >
-                All
+                전체
             </TabButton>
             {values.map((value) => (
                 <TabButton
@@ -123,7 +123,7 @@ type AppFilterDraft = {
 };
 
 const APP_FILTER_LABELS: Record<AppFilterKey, string> = {
-    platform: "Platform",
+    platform: "플랫폼",
     "pollinations-pay": "Pollinations Pay",
 };
 
@@ -154,7 +154,7 @@ function AppSearchInput({
     const options = draft
         ? draft.key === "platform"
             ? availablePlatforms.map((value) => PLATFORM_LABELS[value])
-            : ["Yes", "No"]
+            : ["예", "아니요"]
         : (() => {
               const tokenStart = query.lastIndexOf(" ") + 1;
               const prefix = query.slice(0, tokenStart);
@@ -197,9 +197,17 @@ function AppSearchInput({
             onPlatformsChange(next);
         } else {
             const normalized = value.trim().toLowerCase();
-            if (!["yes", "no", "true", "false"].includes(normalized))
+            if (
+                !["yes", "no", "true", "false", "예", "아니요"].includes(
+                    normalized,
+                )
+            )
                 return false;
-            onPollenPayChange(normalized === "yes" || normalized === "true");
+            onPollenPayChange(
+                normalized === "yes" ||
+                    normalized === "true" ||
+                    normalized === "예",
+            );
         }
         resetDraft();
         return true;
@@ -263,7 +271,7 @@ function AppSearchInput({
     );
     const showPollenToken =
         pollenPay !== undefined && draft?.key !== "pollinations-pay";
-    const pollenLabel = pollenPay ? "Yes" : "No";
+    const pollenLabel = pollenPay ? "예" : "아니요";
     const tokenIds = [
         ...visiblePlatforms.map((platform) => `platform:${platform}`),
         ...(showPollenToken ? ["pollinations-pay"] : []),
@@ -308,11 +316,9 @@ function AppSearchInput({
                 if (draft) resetDraft();
             }}
             placeholder={
-                draft
-                    ? `${APP_FILTER_LABELS[draft.key]} value…`
-                    : "Search apps…"
+                draft ? `${APP_FILTER_LABELS[draft.key]} 값…` : "앱 검색…"
             }
-            aria-label="Search apps"
+            aria-label="앱 검색"
             autoComplete="off"
             startContent={
                 tokenIds.length === 0 && !draft ? (
@@ -322,12 +328,12 @@ function AppSearchInput({
                         {visiblePlatforms.map((platform) => (
                             <EditableComboboxToken
                                 key={platform}
-                                label="Platform"
+                                label="플랫폼"
                                 value={PLATFORM_LABELS[platform]}
                                 highlighted={
                                     pendingRemoval === `platform:${platform}`
                                 }
-                                aria-label={`Change Platform filter: ${PLATFORM_LABELS[platform]}`}
+                                aria-label={`플랫폼 필터 변경: ${PLATFORM_LABELS[platform]}`}
                                 onClick={() => editPlatform(platform)}
                             />
                         ))}
@@ -338,7 +344,7 @@ function AppSearchInput({
                                 highlighted={
                                     pendingRemoval === "pollinations-pay"
                                 }
-                                aria-label={`Change Pollinations Pay filter: ${pollenLabel}`}
+                                aria-label={`Pollinations Pay 필터 변경: ${pollenLabel}`}
                                 onClick={editPollenPay}
                             />
                         )}
@@ -419,24 +425,22 @@ function AppsPage() {
         <>
             <HeroScene page="apps">
                 <ContentHeader
-                    eyebrow="Community catalog"
-                    title="Apps"
+                    eyebrow="커뮤니티 카탈로그"
+                    title="앱"
                     subtitle={
                         <>
-                            Explore what the community builds with Pollinations,
-                            from{" "}
+                            커뮤니티가 Pollinations로 만든 것을 둘러보세요.{" "}
                             <strong>
-                                creative weekend experiments to apps used at
-                                scale
+                                주말의 창의적인 실험부터 규모 있게 쓰이는 앱
                             </strong>
-                            .
+                            까지.
                         </>
                     }
                     variant="page"
                 />
                 <div className="flex flex-col items-start gap-3">
                     <span className="font-semibold text-sm text-theme-text-strong">
-                        Built something with Pollinations?
+                        Pollinations로 무언가 만들었나요?
                     </span>
                     <ExternalLinkButton
                         href="https://github.com/pollinations/pollinations/issues/new?template=app-submission.yml"
@@ -445,7 +449,7 @@ function AppsPage() {
                         icon={<PlusIcon className="size-4 shrink-0" />}
                         className="self-start"
                     >
-                        List your app
+                        앱 등록하기
                     </ExternalLinkButton>
                 </div>
             </HeroScene>
@@ -462,8 +466,8 @@ function AppsPage() {
                     <div className="px-5 pt-5 pb-5 sm:px-6 sm:pt-6">
                         <ContentHeader
                             eyebrow="Pollinations Pay"
-                            title="Most used this week"
-                            subtitle="Apps ranked by requests their users paid for from their own balance."
+                            title="이번 주 많이 사용됨"
+                            subtitle="사용자가 자기 잔액으로 결제한 요청 수로 줄 세운 앱입니다."
                         />
                     </div>
                     {spotlightLoading ? (
@@ -498,11 +502,11 @@ function AppsPage() {
                         postHeroSpacingClassName,
                 )}
             >
-                <ContentHeader eyebrow="Directory" title="All apps" />
+                <ContentHeader eyebrow="디렉터리" title="모든 앱" />
 
                 <div className="flex flex-col items-start gap-3">
                     <FilterAxis
-                        ariaLabel="Categories"
+                        ariaLabel="카테고리"
                         values={APP_CATEGORIES}
                         labels={CATEGORY_LABELS}
                         selected={category}
@@ -550,10 +554,10 @@ function AppsPage() {
                                         loading
                                             ? ""
                                             : filtered.length === apps.length
-                                              ? `${apps.length} apps`
-                                              : `${filtered.length} / ${apps.length} apps`
+                                              ? `${apps.length}개 앱`
+                                              : `${filtered.length} / ${apps.length}개 앱`
                                     }
-                                    options={["0000 / 0000 apps"]}
+                                    options={["0000 / 0000개 앱"]}
                                 />
                                 {loading && (
                                     <Skeleton
@@ -575,7 +579,7 @@ function AppsPage() {
                                             type="button"
                                             size="md"
                                             icon={<SortIcon />}
-                                            aria-label={`Sort apps: ${SORT_LABELS[sort]}`}
+                                            aria-label={`앱 정렬: ${SORT_LABELS[sort]}`}
                                             className="whitespace-nowrap"
                                         >
                                             <StableLabel
@@ -629,12 +633,12 @@ function AppsPage() {
 
                 {failed ? (
                     <EmptyState>
-                        The app directory couldn’t be loaded right now.
+                        지금은 앱 디렉터리를 불러올 수 없습니다.
                     </EmptyState>
                 ) : loading ? (
-                    <LoadingStatus>Loading apps…</LoadingStatus>
+                    <LoadingStatus>앱을 불러오는 중…</LoadingStatus>
                 ) : filtered.length === 0 ? (
-                    <EmptyState>No apps match that combination yet.</EmptyState>
+                    <EmptyState>이 조건에 맞는 앱이 아직 없습니다.</EmptyState>
                 ) : (
                     <>
                         <div className="border-t border-transparent">
@@ -649,10 +653,11 @@ function AppsPage() {
                                     size="lg"
                                     onClick={() => setShown((n) => n + PAGE)}
                                 >
-                                    Show more
+                                    더 보기
                                 </Button>
                                 <p className="text-sm text-theme-text-muted">
-                                    {visible.length} of {filtered.length}
+                                    전체 {filtered.length}개 중 {visible.length}
+                                    개
                                 </p>
                             </div>
                         )}

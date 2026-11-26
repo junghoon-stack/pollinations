@@ -28,39 +28,39 @@ export function MoneyMoves() {
             <div className="relative z-10 flex flex-col gap-10 lg:max-w-[46%]">
                 <ContentHeader
                     eyebrow={null}
-                    title="One credit for every model, agent and tool."
+                    title="모든 모델, 에이전트, 도구에 하나의 크레딧."
                 />
                 <ul className="flex flex-col gap-6">
                     {/* Paid gold and Quest green, as on the wallet; earnings
                         land in both, so that row takes the info blue. */}
-                    <Item icon={CardIcon} tone="paid" title="Pay as you go">
-                        Top up any time and pay only for what you use.
+                    <Item icon={CardIcon} tone="paid" title="사용한 만큼 지불">
+                        필요할 때 충전하고 사용한 만큼만 지불하세요.
                     </Item>
-                    <Item icon={SproutIcon} tone="tier" title="Free credits">
-                        Complete Quests to add to your balance: solve GitHub
-                        issues, try models, or build an app or agent.{" "}
+                    <Item icon={SproutIcon} tone="tier" title="무료 크레딧">
+                        퀘스트를 완료해 잔액을 늘리세요: GitHub 이슈 해결, 모델
+                        체험, 앱이나 에이전트 만들기.{" "}
                         {quests ? (
                             <>
-                                {formatCount(quests.totals.contributors)} people
-                                have completed Quests.{" "}
+                                이미 {formatCount(quests.totals.contributors)}
+                                명이 퀘스트를 완료했습니다.{" "}
                             </>
                         ) : null}
                         <InlineLink href="https://enter.pollinations.ai/quests">
-                            Explore Quests
+                            퀘스트 둘러보기
                         </InlineLink>
                     </Item>
-                    <Item icon={EarningsIcon} tone="info" title="Earnings">
-                        Get a share of what others spend on your{" "}
+                    <Item icon={EarningsIcon} tone="info" title="수익">
+                        다른 사람이 내{" "}
                         <InlineLink href="https://gen.pollinations.ai/docs#tag/publish-a-model">
-                            models
+                            모델
                         </InlineLink>{" "}
-                        and{" "}
+                        과{" "}
                         {/* Keep the link's arrow and the full stop on its line. */}
                         <span className="whitespace-nowrap">
                             <InlineLink href="https://gen.pollinations.ai/docs#tag/pollinations-pay">
-                                apps
+                                앱
                             </InlineLink>
-                            .
+                            에 쓰는 금액의 일부를 받으세요.
                         </span>
                     </Item>
                 </ul>

@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useNewestApps, useWeeklyApps } from "../../data/publicStats";
 import { AppCarousel } from "../apps/AppCarousel";
 
-const TABS = ["Most used this week", "Newest"] as const;
+const TABS = ["이번 주 많이 사용됨", "최신"] as const;
 // The same icons as the Popular and New sorts on /apps.
 const TAB_ICONS = { [TABS[0]]: TrendUpIcon, [TABS[1]]: ClockIcon };
 
@@ -37,7 +37,7 @@ export function LiveApps() {
 
     return (
         <section className="flex flex-col gap-5">
-            <ContentHeader eyebrow={null} title="Apps from the community." />
+            <ContentHeader eyebrow={null} title="커뮤니티가 만든 앱." />
             <div className="flex flex-wrap items-center gap-2">
                 {TABS.map((label) => {
                     const Icon = TAB_ICONS[label];
@@ -60,7 +60,7 @@ export function LiveApps() {
                     size="md"
                     className="ml-auto gap-2"
                 >
-                    See all apps
+                    모든 앱 보기
                     <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
                 </Button>
             </div>
@@ -68,7 +68,7 @@ export function LiveApps() {
                 <ScrollArea
                     axis="x"
                     tabIndex={0}
-                    aria-label="Loading apps built on Pollinations"
+                    aria-label="Pollinations로 만든 앱을 불러오는 중"
                     className="flex gap-4 pb-4"
                 >
                     {[0, 1, 2].map((i) => (
@@ -79,7 +79,7 @@ export function LiveApps() {
                     ))}
                 </ScrollArea>
             ) : failed ? (
-                <EmptyState>Apps couldn’t be loaded right now.</EmptyState>
+                <EmptyState>지금은 앱을 불러올 수 없습니다.</EmptyState>
             ) : (
                 <AppCarousel key={tab} apps={apps} />
             )}

@@ -32,12 +32,12 @@ function AppSignals({ app }: { app: DirectoryApp }) {
     return (
         <span className="flex shrink-0 items-center gap-1.5 text-theme-text-muted">
             {isFresh(app) ? (
-                <span role="img" title="New" aria-label="New">
+                <span role="img" title="신규" aria-label="신규">
                     <ClockIcon className="size-4" />
                 </span>
             ) : null}
             {isBuzz(app) ? (
-                <span role="img" title="Popular" aria-label="Popular">
+                <span role="img" title="인기" aria-label="인기">
                     <TrendUpIcon className="size-4" />
                 </span>
             ) : null}

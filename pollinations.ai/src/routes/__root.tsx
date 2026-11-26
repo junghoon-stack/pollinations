@@ -38,13 +38,13 @@ function NotFoundPage() {
             <div className="flex flex-col gap-8">
                 <ContentHeader
                     eyebrow="404"
-                    title="That page flew away."
-                    subtitle="The link may be outdated, or the page may have moved."
+                    title="페이지가 날아가 버렸어요."
+                    subtitle="링크가 오래되었거나 페이지가 이동했을 수 있습니다."
                     variant="page"
                 />
                 <div>
                     <Button as="a" href="/" intent="brand" size="lg">
-                        Back to Pollinations
+                        Pollinations로 돌아가기
                     </Button>
                 </div>
             </div>

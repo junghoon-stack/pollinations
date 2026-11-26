@@ -8,22 +8,22 @@ export function StartBuilding() {
     return (
         <Callout
             tone="dark"
-            title="Start with one piece."
-            body="Your first API key earns a small Quest reward. Make a call, then publish when you’re ready."
+            title="한 조각부터 시작하세요."
+            body="첫 API 키로 작은 퀘스트 보상을 받습니다. 한 번 호출해 보고, 준비되면 게시하세요."
         >
             <ExternalLinkButton
                 href="https://enter.pollinations.ai/keys"
                 intent="brand"
                 size="lg"
             >
-                Get an API key
+                API 키 받기
             </ExternalLinkButton>
             <ExternalLinkButton
                 href="https://discord.gg/k9F7SyTgqn"
                 intent="neutral"
                 size="lg"
             >
-                Join the Discord
+                Discord 참여하기
             </ExternalLinkButton>
         </Callout>
     );

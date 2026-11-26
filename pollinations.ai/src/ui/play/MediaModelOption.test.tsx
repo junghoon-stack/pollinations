@@ -14,7 +14,7 @@ describe("model dropdown option", () => {
                         model={{ title: "Test", paidOnly: false, addedDate }}
                     />,
                 );
-                expect(html.includes(">New</span>")).toBe(
+                expect(html.includes(">신규</span>")).toBe(
                     addedDate !== undefined && addedDate > cutoff,
                 );
             }
@@ -23,8 +23,8 @@ describe("model dropdown option", () => {
         }
     });
     it.each([
-        [true, "Uses paid balance only", "polli-wallet-text-paid"],
-        [false, "Works with any balance", "polli-wallet-text-tier"],
+        [true, "유료 잔액만 사용", "polli-wallet-text-paid"],
+        [false, "모든 잔액 사용 가능", "polli-wallet-text-tier"],
     ] as const)(
         "shows the %s wallet icon after the price",
         (paidOnly, label, color) => {

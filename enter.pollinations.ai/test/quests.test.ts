@@ -402,12 +402,22 @@ test("catalog returns quest definitions without ledger stats", async ({
     });
     expectStableCatalogFields("use_app", {
         state: "available",
-        rewardAmount: 0.25,
+        rewardAmount: 0.75,
         balanceBucket: "tier",
     });
     expectStableCatalogFields("connect_polli_cli", {
         state: "available",
-        rewardAmount: 1,
+        rewardAmount: 5,
+        balanceBucket: "tier",
+    });
+    expectStableCatalogFields("connect_google", {
+        state: "available",
+        rewardAmount: 0.5,
+        balanceBucket: "tier",
+    });
+    expectStableCatalogFields("create_app_key", {
+        state: "available",
+        rewardAmount: 0.5,
         balanceBucket: "tier",
     });
     expectStableCatalogFields("join_discord", {
@@ -1486,7 +1496,59 @@ test("Polli CLI quest rewards device-login keys on accounts 3+ days old", async 
         })
         .from(schema.rewards)
         .where(eq(schema.rewards.questId, "connect_polli_cli"));
-    expect(rewards).toEqual([{ userId: polliUserId, amount: 1 }]);
+    expect(rewards).toEqual([{ userId: polliUserId, amount: 5 }]);
+});
+
+test("easy setup quests reward a linked Google account and a publishable app key", async ({
+    sessionToken: _sessionToken,
+}) => {
+    const db = drizzle(env.DB, { schema });
+    const owner = await getOnlyUser();
+    const [targetUserId] = await seedByopConnections(owner.id, 1, "easy-setup");
+    if (!targetUserId) throw new Error("Expected an easy-setup user");
+
+    const easyRewards = () =>
+        db
+            .select({
+                questId: schema.rewards.questId,
+                amount: schema.rewards.pollenAmount,
+            })
+            .from(schema.rewards)
+            .where(
+                inArray(schema.rewards.questId, [
+                    "connect_google",
+                    "create_app_key",
+                ]),
+            );
+
+    await checkQuestsForUser(env, targetUserId, [
+        questIndex.ACCOUNT_SETUP_QUEST_GROUP,
+    ]);
+    expect(await easyRewards()).toEqual([]);
+
+    await db.insert(schema.account).values({
+        id: "easy-setup-google-account",
+        accountId: "easy-setup-google-sub",
+        providerId: "google",
+        userId: targetUserId,
+    });
+    await db.insert(schema.apikey).values({
+        id: "easy-setup-pk-key",
+        name: "Easy setup app key",
+        key: "pk_easy_setup",
+        prefix: "pk",
+        referenceId: targetUserId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    });
+
+    await checkQuestsForUser(env, targetUserId, [
+        questIndex.ACCOUNT_SETUP_QUEST_GROUP,
+    ]);
+    expect(await easyRewards()).toEqual([
+        { questId: "connect_google", amount: 0.5 },
+        { questId: "create_app_key", amount: 0.5 },
+    ]);
 });
 
 test("use_app counts only logins into another account's GitHub-linked app", async ({
@@ -3238,13 +3300,14 @@ test("restricted accounts can earn and claim Setup rewards into their frozen Que
         { method: "POST", headers },
     );
     expect(await claimed.json()).toMatchObject({ claimed: true });
-    expect(await tierBalanceOf(userId)).toBe(0.5);
+    // first_api_key (0.75, auto-claimed) + use_text_model (0.25, claimed here).
+    expect(await tierBalanceOf(userId)).toBe(1);
     const balance = await SELF.fetch(
         "http://localhost:3000/api/account/balance",
         { headers },
     );
     expect(await balance.json()).toMatchObject({
         balance: 0,
-        accountBalance: { tier: 0, heldTier: 0.5, questPollenRestricted: true },
+        accountBalance: { tier: 0, heldTier: 1, questPollenRestricted: true },
     });
 });

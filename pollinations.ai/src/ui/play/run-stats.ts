@@ -12,10 +12,10 @@ export function formatRunCost(usd?: number | null): string | undefined {
 export function formatRunTime(ms?: number | null): string | undefined {
     if (ms == null || ms <= 0) return;
     const seconds = Math.max(1, Math.round(ms / 1000));
-    if (seconds < 60) return `${seconds}s`;
+    if (seconds < 60) return `${seconds}초`;
     const minutes = Math.floor(seconds / 60);
     const rest = seconds % 60;
-    return rest ? `${minutes}m ${rest}s` : `${minutes}m`;
+    return rest ? `${minutes}분 ${rest}초` : `${minutes}분`;
 }
 
 export function fastModelsByTime(stats: ModelRunStat[]) {

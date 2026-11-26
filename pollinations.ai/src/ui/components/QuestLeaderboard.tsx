@@ -31,15 +31,15 @@ export function QuestLeaderboard() {
         >
             <ContentHeader
                 eyebrow={null}
-                title="Quest leaderboard"
-                subtitle="People completing Quests and contributing to Pollinations."
+                title="퀘스트 리더보드"
+                subtitle="퀘스트를 완료하며 Pollinations에 기여하는 사람들."
                 action={
                     <ExternalLinkButton
                         href={QUESTS_PAGE_URL}
                         size="md"
                         intent="brand"
                     >
-                        Explore Quests
+                        퀘스트 둘러보기
                     </ExternalLinkButton>
                 }
             />
@@ -48,11 +48,8 @@ export function QuestLeaderboard() {
                     <div className="grid grid-cols-1 gap-3 min-[440px]:grid-cols-2">
                         {(
                             [
-                                ["Participants", data.totals.contributors],
-                                [
-                                    "Quests completed",
-                                    data.totals.completedQuests,
-                                ],
+                                ["참가자", data.totals.contributors],
+                                ["완료된 퀘스트", data.totals.completedQuests],
                             ] as const
                         ).map(([label, value]) => (
                             <Surface key={label} as="div" variant="card">
@@ -83,7 +80,7 @@ export function QuestLeaderboard() {
                                                     : "neutral"
                                             }
                                             size="sm"
-                                            aria-label={`Rank ${index + 1}`}
+                                            aria-label={`순위 ${index + 1}`}
                                             className="w-8"
                                         >
                                             {index + 1}
@@ -116,9 +113,7 @@ export function QuestLeaderboard() {
                                                     {formatNumber(
                                                         entry.completedQuests,
                                                     )}{" "}
-                                                    {entry.completedQuests === 1
-                                                        ? "Quest"
-                                                        : "Quests"}
+                                                    퀘스트
                                                 </Text>
                                                 {/* Quest rewards, in the wallet's Quest green, as on the dashboard. */}
                                                 <Text
@@ -137,7 +132,7 @@ export function QuestLeaderboard() {
                                                     )}
                                                     <span className="sr-only">
                                                         {" "}
-                                                        earned
+                                                        획득
                                                     </span>
                                                 </Text>
                                             </span>
@@ -167,7 +162,7 @@ export function QuestLeaderboard() {
                 </>
             ) : (
                 <EmptyState>
-                    The Quest leaderboard couldn’t be loaded right now.
+                    지금은 퀘스트 리더보드를 불러올 수 없습니다.
                 </EmptyState>
             )}
         </section>

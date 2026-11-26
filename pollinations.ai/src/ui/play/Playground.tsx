@@ -128,7 +128,7 @@ import { videoOptions } from "./video-options";
 
 function errorMessage(error: unknown): string {
     if (error instanceof Error) return error.message;
-    return "Something went wrong. Please try again.";
+    return "문제가 발생했습니다. 다시 시도해 주세요.";
 }
 
 type PlaygroundModel = MediaModelMetadata & {
@@ -153,25 +153,25 @@ type PlaygroundModel = MediaModelMetadata & {
 
 const WORKSPACES = [
     {
-        label: "Image",
+        label: "이미지",
         icon: ImageIcon,
         category: "image",
         operations: ["image"],
     },
     {
-        label: "Video",
+        label: "비디오",
         icon: VideoIcon,
         category: "video",
         operations: ["video"],
     },
     {
-        label: "Audio",
+        label: "오디오",
         icon: AudioIcon,
         category: "audio",
         operations: audioTaskIds,
     },
     {
-        label: "Decide",
+        label: "판단",
         icon: GitBranchIcon,
         category: "decision",
         operations: ["decide"],
@@ -239,6 +239,12 @@ const UPLOAD_ACCEPT: Record<UploadMedia, string> = {
     video: ["video/*", ...VIDEO_EXTENSIONS].join(","),
     audio: "audio/*,.mp3,.mpeg,.mpga,.m4a,.wav",
 };
+const MEDIA_LABELS: Record<UploadMedia, string> = {
+    image: "이미지",
+    video: "비디오",
+    audio: "오디오",
+};
+const mediaLabel = (media: UploadMedia) => MEDIA_LABELS[media];
 
 type MediaResult =
     | ReturnType<typeof imageResult>
@@ -265,19 +271,19 @@ function promptPlaceholder(
         id,
         workspace: { category },
     } = task;
-    if (id === "decide") return "Describe the situation…";
-    if (format === "gif") return "Describe the animation you want…";
+    if (id === "decide") return "상황을 설명하세요…";
+    if (format === "gif") return "원하는 애니메이션을 설명하세요…";
     if (format === "svg" && !editsImage)
-        return "Describe the vector image you want…";
-    if (editsImage) return "Describe the changes you want…";
-    if (category === "image") return "Describe the image you want…";
-    if (category === "video") return "Describe the video you want…";
+        return "원하는 벡터 이미지를 설명하세요…";
+    if (editsImage) return "원하는 변경 사항을 설명하세요…";
+    if (category === "image") return "원하는 이미지를 설명하세요…";
+    if (category === "video") return "원하는 비디오를 설명하세요…";
     if (id === "transcription")
-        return "Optional vocabulary, names, or context for the transcript…";
-    if (id === "speech-generation") return "Enter the words you want spoken…";
+        return "전사에 참고할 단어, 이름, 상황을 입력하세요 (선택)…";
+    if (id === "speech-generation") return "읽어 줄 문장을 입력하세요…";
     if (id === "music-and-sound-effects")
-        return "Describe the music or sound you want…";
-    return "Describe what you want…";
+        return "원하는 음악이나 사운드를 설명하세요…";
+    return "원하는 내용을 설명하세요…";
 }
 
 /** MIME subtypes that are not the usual file extension. */
@@ -353,7 +359,7 @@ function OptionField({
                 <Chip
                     data-theme="neutral"
                     size="lg"
-                    aria-label={`Fixed ${label.toLowerCase()}: ${format(options[0])}`}
+                    aria-label={`${label} 고정값: ${format(options[0])}`}
                     className="justify-self-start"
                 >
                     {format(options[0])}
@@ -390,23 +396,23 @@ function VideoDurationField({
     if (count <= 6) {
         return (
             <OptionField
-                label="Duration"
+                label="길이"
                 options={Array.from({ length: count }, (_, i) =>
                     String(secondsAt(i)),
                 )}
                 value={String(value)}
                 onChange={onChange}
-                format={(seconds) => `${seconds}s`}
+                format={(seconds) => `${seconds}초`}
             />
         );
     }
 
     return (
-        <FieldStack label="Duration" orientation="inline" className="min-w-0">
+        <FieldStack label="길이" orientation="inline" className="min-w-0">
             <div className="flex min-w-0 max-w-64 items-center gap-3">
                 <Slider
-                    aria-label="Video duration"
-                    aria-valuetext={`${value} seconds`}
+                    aria-label="비디오 길이"
+                    aria-valuetext={`${value}초`}
                     min={0}
                     max={count - 1}
                     step={1}
@@ -446,7 +452,7 @@ function VoicePicker({
     if (voices.length <= 6) {
         return (
             <OptionField
-                label="Voice"
+                label="음성"
                 options={voices}
                 format={capitalize}
                 value={value}
@@ -455,7 +461,7 @@ function VoicePicker({
         );
     }
     return (
-        <FieldStack label="Voice" orientation="inline" className="min-w-0">
+        <FieldStack label="음성" orientation="inline" className="min-w-0">
             <Dropdown
                 portalled={false}
                 className="w-[var(--reference-width)] overscroll-y-contain p-2"
@@ -464,7 +470,7 @@ function VoicePicker({
                         type="button"
                         intent="neutral"
                         className="w-fit max-w-full self-start justify-between gap-2"
-                        aria-label={`Voice: ${capitalize(value)}`}
+                        aria-label={`음성: ${capitalize(value)}`}
                     >
                         <span className="truncate">{capitalize(value)}</span>
                         <ChevronIcon expanded={open} />
@@ -509,6 +515,24 @@ const uploadLimitsMiB = { image: 5, video: 20, audio: 20, stemSeparation: 50 };
 
 const imageFilterOptions = ["All", ...Object.values(imageFilters)];
 const audioFilters = ["All", ...new Set(Object.values(audioTaskGroups))];
+
+// Filter values stay as stored tokens; only their labels are translated.
+const FILTER_LABELS: Record<string, string> = {
+    All: "전체",
+    Fast: "빠름",
+    Edit: "편집",
+    GIF: "GIF",
+    SVG: "SVG",
+    "4K": "4K",
+    "First + last frames": "첫+마지막 프레임",
+    "Reference video": "참조 비디오",
+    "With sound": "사운드 포함",
+    Speech: "음성",
+    Transcribe: "전사",
+    Music: "음악",
+    Tools: "도구",
+};
+const filterLabel = (value: string) => FILTER_LABELS[value] ?? value;
 
 function audioGroupForModel(model: PlaygroundModel) {
     const task = audioTaskForModel(model);
@@ -567,8 +591,8 @@ function estimatePerDollar(model: PlaygroundModel, medianCost?: number | null) {
         free: model.free,
     });
     if (count === "—") return undefined;
-    if (count === "∞") return "Free";
-    return `${count === "<1" ? "" : "≈"}${count} gen/$1`;
+    if (count === "∞") return "무료";
+    return `${count === "<1" ? "" : "≈"}${count}회/$1`;
 }
 
 function ModelPicker({
@@ -633,7 +657,7 @@ function ModelPicker({
 
     function stepButton(direction: -1 | 1) {
         if (!canStep) return null;
-        const label = direction === -1 ? "Previous model" : "Next model";
+        const label = direction === -1 ? "이전 모델" : "다음 모델";
         return (
             <Button
                 size="icon"
@@ -671,16 +695,16 @@ function ModelPicker({
                             disabled={isLoading || models.length === 0}
                             className="w-full touch-pan-y justify-between gap-2 pr-3 pl-6"
                             title={selected?.title}
-                            aria-label={`Model: ${selected?.title ?? (models.length ? "Choose a model" : "Unavailable")}`}
+                            aria-label={`모델: ${selected?.title ?? (models.length ? "모델 선택" : "사용 불가")}`}
                             aria-description={
                                 selected &&
                                 [
                                     selected.paidOnly
-                                        ? "Uses paid balance only"
-                                        : "Works with any balance",
+                                        ? "유료 잔액만 사용"
+                                        : "모든 잔액 사용 가능",
                                     selected.publisher,
                                     isNewModel(selected.addedDate)
-                                        ? "New"
+                                        ? "신규"
                                         : undefined,
                                 ]
                                     .filter(Boolean)
@@ -728,16 +752,16 @@ function ModelPicker({
                                 aria-live="polite"
                             >
                                 {isLoading ? (
-                                    "Loading models…"
+                                    "모델 불러오는 중…"
                                 ) : selected ? (
                                     <MediaModelOption
                                         model={selected}
                                         showPricing={false}
                                     />
                                 ) : models.length ? (
-                                    "Choose a model"
+                                    "모델 선택"
                                 ) : (
-                                    "No models available"
+                                    "사용 가능한 모델 없음"
                                 )}
                             </span>
                             <ChevronIcon expanded={open} />
@@ -751,7 +775,7 @@ function ModelPicker({
                         >
                             {filters.length > 1 && (
                                 <fieldset
-                                    aria-label={`Filter ${category} models`}
+                                    aria-label="모델 필터"
                                     className="sticky top-0 z-10 mb-1 flex flex-wrap gap-1 border-b border-theme-text-muted/20 bg-surface-menu pt-1 pr-px pb-2 pl-1"
                                 >
                                     {filters.map((value) => (
@@ -760,7 +784,7 @@ function ModelPicker({
                                             active={value === activeFilter}
                                             title={
                                                 value === "Fast"
-                                                    ? "Fastest quarter by measured response time"
+                                                    ? "측정된 응답 시간 기준 상위 25%"
                                                     : undefined
                                             }
                                             className="max-sm:px-2 max-sm:text-xs"
@@ -779,16 +803,16 @@ function ModelPicker({
                                                 );
                                             }}
                                         >
-                                            {value}
+                                            {filterLabel(value)}
                                         </TabButton>
                                     ))}
                                     <TabButton
                                         active={questOnly}
                                         size="sm"
                                         intent="green"
-                                        ariaLabel="Quests"
+                                        ariaLabel="퀘스트"
                                         className="ml-auto size-9 shrink-0 p-0"
-                                        title="Show models that accept Quest balance"
+                                        title="퀘스트 잔액을 쓸 수 있는 모델만 표시"
                                         disabled={
                                             !questOnly &&
                                             !visible.some(
@@ -886,7 +910,7 @@ function RunStatBadge({
                 popoverTarget={id}
                 popoverTargetAction="show"
                 style={{ anchorName: anchor }}
-                aria-label={`${label} ${value ?? "unavailable"}`}
+                aria-label={`${label} ${value ?? "기록 없음"}`}
                 className="flex cursor-help rounded-lg"
             >
                 <Chip size="md" data-theme="neutral" className="tabular-nums">
@@ -916,9 +940,7 @@ function RunStatBadge({
                 style={{ positionAnchor: anchor }}
                 className="play-stat-popover w-64 max-w-[calc(100vw-1.5rem)] rounded-lg bg-surface-menu px-3 py-2 text-xs text-theme-text-base shadow-lg"
             >
-                <p>
-                    {value ? detail : "No estimate available for this model."}
-                </p>
+                <p>{value ? detail : "이 모델의 예상값이 없습니다."}</p>
                 <InlineLink
                     href={href}
                     onBlur={() => panel.current?.hidePopover()}
@@ -941,7 +963,7 @@ function ResultDownloadButton({
     result: MediaResult;
     className?: string;
 }) {
-    const label = `Download ${result.type === "image" ? (result.formatLabel ?? "image") : result.type}`;
+    const label = `다운로드: ${result.type === "image" ? (result.formatLabel ?? "이미지") : result.type}`;
     return (
         <Button
             as="a"
@@ -982,13 +1004,13 @@ function Lightbox({
             onOpenChange={(nextOpen) => {
                 if (!nextOpen) onClose();
             }}
-            ariaLabel={`Enlarged ${result.type}`}
+            ariaLabel="확대 보기"
             size="xl"
             contentClassName="play-media-lightbox relative border-0 p-0"
         >
             <Button
                 type="button"
-                aria-label="Close media preview"
+                aria-label="미리보기 닫기"
                 onClick={onClose}
                 size="icon"
                 className="absolute top-5 right-5 z-10"
@@ -999,7 +1021,7 @@ function Lightbox({
                 (result.type === "image" ? (
                     <img
                         src={result.url}
-                        alt="Generated, enlarged"
+                        alt="확대한 생성 이미지"
                         className="block max-h-[calc(100dvh-5rem)] w-auto max-w-full self-center rounded-lg object-contain"
                     />
                 ) : (
@@ -1055,7 +1077,7 @@ function ResultPanel({ result }: { result: PlaygroundResult }) {
             <Alert intent="advisory">
                 {result.notice}{" "}
                 <InlineLink href={result.url} download={result.filename}>
-                    Download original file
+                    원본 파일 다운로드
                 </InlineLink>
             </Alert>
         );
@@ -1066,7 +1088,7 @@ function ResultPanel({ result }: { result: PlaygroundResult }) {
                 variant="card"
                 className="flex items-center justify-between gap-3"
             >
-                <Text>Separated stems (ZIP)</Text>
+                <Text>분리된 스템 (ZIP)</Text>
                 <ResultDownloadButton result={result} />
             </Surface>
         );
@@ -1114,13 +1136,13 @@ function ResultPanel({ result }: { result: PlaygroundResult }) {
                     {result.type === "image" && (
                         <button
                             type="button"
-                            aria-label="Enlarge image"
+                            aria-label="이미지 확대"
                             className={zoomButtonClass}
                             onClick={() => setExpanded(true)}
                         >
                             <img
                                 src={result.url}
-                                alt="Generated"
+                                alt="생성 이미지"
                                 className="block h-auto max-h-[min(70dvh,640px)] w-auto max-w-full"
                             />
                         </button>
@@ -1134,7 +1156,7 @@ function ResultPanel({ result }: { result: PlaygroundResult }) {
                         // controls.
                         <button
                             type="button"
-                            aria-label="Enlarge video"
+                            aria-label="비디오 확대"
                             className={zoomButtonClass}
                             onClick={() => setExpanded(true)}
                         >
@@ -1268,15 +1290,16 @@ export function Playground({
         tooMany: string,
         maxMb = Math.max(...media.map((item) => uploadLimitsMiB[item])),
     ) => {
+        const kinds = media.map(mediaLabel).join(" 또는 ");
         const messages = {
-            size: `Each file must be under ${maxMb} MB.`,
+            size: `각 파일은 ${maxMb}MB 이하여야 합니다.`,
             count: tooMany,
-            type: `Only ${media.join(" or ")} files are allowed.`,
+            type: `${kinds} 파일만 올릴 수 있습니다.`,
         };
         const onReject: FileUploadProps["onReject"] = (rejected) =>
             runStore.set({ error: messages[rejected[0].reason] });
         return {
-            inputLabel: `Choose ${media.join(" or ")} file`,
+            inputLabel: `${kinds} 파일 선택`,
             tileModality: media.length === 1 ? media[0] : ("mixed" as const),
             accept: media.map((item) => UPLOAD_ACCEPT[item]).join(","),
             maxSizeBytes: maxMb * 1024 * 1024,
@@ -1554,7 +1577,7 @@ export function Playground({
         currentModel?.category === "audio" &&
         acceptsMediaUpload &&
         !currentModel.inputModalities.includes("text");
-    const mediaUploadLabel = uploadMedia.join(" or ");
+    const mediaUploadLabel = uploadMedia.map(mediaLabel).join(" 또는 ");
     const MediaUploadIcon = isAudioTranscription
         ? MicIcon
         : CATEGORY_ICON[uploadMedia[0] ?? "audio"];
@@ -1564,10 +1587,10 @@ export function Playground({
           (transcription?.prompt ??
               currentModel.inputModalities.includes("text"));
     const promptLabel = isDecide
-        ? "Context"
+        ? "상황"
         : isAudioTranscription
-          ? "Instructions"
-          : "Description";
+          ? "지시사항"
+          : "설명";
     const selectedModelAllowed =
         !!currentModel &&
         isLoggedIn &&
@@ -1882,10 +1905,10 @@ export function Playground({
             ...uploadProps(
                 [media],
                 media === "audio"
-                    ? "Too many audio clips."
+                    ? "오디오 클립이 너무 많습니다."
                     : maxVideos
-                      ? `Use up to ${maxVideos === 1 ? "1 video" : `${maxVideos} videos`}.`
-                      : "Too many files.",
+                      ? `비디오는 최대 ${maxVideos}개까지 추가할 수 있습니다.`
+                      : "파일이 너무 많습니다.",
             ),
             value,
             maxFiles:
@@ -1923,7 +1946,7 @@ export function Playground({
                 const { answers } = await client.decision(decisionRequest);
                 const answer = answers.decision;
                 if (answer?.type !== decisionRequest.questions.decision.type)
-                    throw new Error("The model returned an unexpected answer.");
+                    throw new Error("모델이 예상과 다른 응답을 반환했습니다.");
                 runStore.set({
                     result: {
                         type: "decision",
@@ -2042,33 +2065,37 @@ export function Playground({
         currentModel?.category === "image" &&
         (requiresImage || (acceptsImageParam && referenceImages.length > 0));
     const generateLabel = isDecide
-        ? "Evaluate"
+        ? "평가"
         : currentModel?.category === "video"
-          ? "Generate video"
+          ? "비디오 생성"
           : currentModel?.category === "audio"
             ? isAudioTranscription
-                ? "Transcribe audio"
+                ? "오디오 전사"
                 : currentAudioEndpoint === "/v1/audio/voice-changer"
-                  ? "Change voice"
+                  ? "음성 변환"
                   : currentAudioEndpoint === "/v1/audio/voice-isolator"
-                    ? "Isolate speech"
+                    ? "음성 분리"
                     : currentAudioEndpoint === "/alpha/audio/stem-separation"
-                      ? "Separate stems"
-                      : "Generate audio"
+                      ? "스템 분리"
+                      : "오디오 생성"
             : imageActionLabel(editsImage, format);
     const GenerateIcon = task.workspace.icon;
     const busyLabel = isDecide
-        ? "Evaluating…"
+        ? "평가 중…"
         : isAudioTranscription
-          ? "Transcribing…"
-          : "Generating…";
+          ? "오디오 전사 중…"
+          : "생성 중…";
     // The placeholder belongs to the tab whose run is in flight; audio has none.
     const busyVisual =
         running === "image" || running === "video" ? running : null;
 
-    const againLabel = generateLabel.startsWith("Generate ")
-        ? "Generate again"
-        : generateLabel;
+    const canRepeat =
+        currentModel?.category === "image" ||
+        currentModel?.category === "video" ||
+        (currentModel?.category === "audio" &&
+            (currentAudioEndpoint === "/v1/audio/speech" ||
+                currentAudioEndpoint === "/audio/{text}"));
+    const againLabel = canRepeat ? "다시 생성" : generateLabel;
     const generateText = (
         <StableLabel
             text={
@@ -2077,7 +2104,7 @@ export function Playground({
             options={[generateLabel, againLabel, busyLabel]}
         />
     );
-    const connectLabel = `Connect to ${generateLabel[0].toLowerCase()}${generateLabel.slice(1)}`;
+    const connectLabel = `연결하고 ${generateLabel}`;
 
     // Signed out is a step, not a fault — handled by the button itself.
     const needsSignIn = isHydrated && !apiKey;
@@ -2088,31 +2115,31 @@ export function Playground({
 
     /** Why the button cannot fire, or null when it can. Shown beside the button. */
     const blockedReason = recording
-        ? "Finish recording first"
+        ? "먼저 녹음을 끝내 주세요"
         : needsSignIn
           ? null
           : inputError
             ? inputError
             : needsEditImage
-              ? "Add an image to edit"
+              ? "편집할 이미지를 추가하세요"
               : missingInput
                 ? requiresMediaUpload
-                    ? `Upload ${mediaUploadLabel} first`
-                    : `Add ${promptLabel.toLowerCase()} first`
+                    ? `먼저 ${mediaUploadLabel} 파일을 올려 주세요`
+                    : `먼저 ${promptLabel}을 입력하세요`
                 : !selectedModelAllowed
                   ? isLoading
-                      ? "Models are loading"
+                      ? "모델을 불러오는 중"
                       : catalogError
-                        ? "Models failed to load"
+                        ? "모델을 불러오지 못했습니다"
                         : !currentModel
-                          ? "Choose an available model"
-                          : "This key cannot use the selected model"
+                          ? "사용 가능한 모델을 선택하세요"
+                          : "이 키로는 선택한 모델을 사용할 수 없습니다"
                   : null;
 
     // The button's action; Cmd/Ctrl+Enter in the prompt does the same.
     async function connect() {
         if (recording) {
-            runStore.set({ error: "Finish recording before connecting." });
+            runStore.set({ error: "연결하기 전에 녹음을 끝내 주세요." });
             return;
         }
         const saved = {
@@ -2138,7 +2165,7 @@ export function Playground({
             login();
         } catch {
             runStore.set({
-                error: "Couldn’t save your files for sign-in. Free up browser storage or remove the files and try again.",
+                error: "로그인을 위해 파일을 저장하지 못했습니다. 브라우저 저장 공간을 확보하거나 파일을 제거한 뒤 다시 시도해 주세요.",
             });
         }
     }
@@ -2147,7 +2174,7 @@ export function Playground({
     const modelStats = stats?.find((stat) => stat.model === currentModel?.id);
     const cost =
         formatRunCost(modelStats?.avg_cost_usd) ??
-        (currentModel?.free ? "Free" : undefined);
+        (currentModel?.free ? "무료" : undefined);
     const time = formatRunTime(modelStats?.avg_response_ms);
 
     const clipStatus = clipError && <span id={clipStatusId}>{clipError}</span>;
@@ -2163,7 +2190,7 @@ export function Playground({
     const audioUploadProps = acceptsMediaUpload
         ? uploadProps(
               uploadMedia,
-              "Use one media file.",
+              "미디어 파일은 하나만 올려 주세요.",
               isStemSeparation ? uploadLimitsMiB.stemSeparation : undefined,
           )
         : undefined;
@@ -2172,8 +2199,8 @@ export function Playground({
             <fieldset
                 aria-label={
                     requiresMediaUpload
-                        ? `${mediaUploadLabel} input`
-                        : "Reference media"
+                        ? `${mediaUploadLabel} 입력`
+                        : "참조 미디어"
                 }
                 className="flex min-w-0 flex-col gap-2"
             >
@@ -2187,7 +2214,7 @@ export function Playground({
                             onBusyChange={setRecordingAudio}
                             onClipDuration={onClipDuration}
                             disabled={isGenerating || recordingVideo}
-                            importLabel={capitalize(mediaUploadLabel)}
+                            importLabel={mediaUploadLabel}
                             {...audioUploadProps}
                         />
                     ) : (
@@ -2200,7 +2227,7 @@ export function Playground({
                             previewIcon={
                                 <MediaUploadIcon className="h-5 w-5" />
                             }
-                            label={capitalize(mediaUploadLabel)}
+                            label={mediaUploadLabel}
                         />
                     )}
                     {uploadMedia.includes("video") &&
@@ -2249,8 +2276,8 @@ export function Playground({
     const frameTiles =
         supportsFrames &&
         (supportsLastFrame
-            ? ["First frame", "Last frame"]
-            : ["First frame"]
+            ? ["첫 프레임", "마지막 프레임"]
+            : ["첫 프레임"]
         ).map((label, index) => (
             <fieldset
                 key={label}
@@ -2266,13 +2293,13 @@ export function Playground({
                     maxFiles={1}
                     {...uploadProps(
                         ["image"],
-                        `Use one image for the ${label.toLowerCase()}.`,
+                        `${label}에는 이미지 하나만 사용하세요.`,
                     )}
                     disabled={
                         framesDisabled || (index > 0 && !referenceImages[0])
                     }
                     label={label}
-                    inputLabel={`Choose ${label.toLowerCase()}`}
+                    inputLabel={`${label} 선택`}
                 />
                 {referenceImages[index] && (
                     <Text size="xs" tone="muted" className="mt-1 text-center">
@@ -2284,7 +2311,7 @@ export function Playground({
     return (
         <div className="relative z-10 flex w-full flex-col pb-12 text-theme-text-base sm:pb-16">
             <fieldset
-                aria-label="Playground task"
+                aria-label="플레이그라운드 작업"
                 className="m-0 flex min-w-0 flex-wrap gap-2 border-0 p-0"
             >
                 {WORKSPACES.map((item) => (
@@ -2317,7 +2344,8 @@ export function Playground({
                 {catalogError && (
                     <div className="pt-4">
                         <Alert intent="danger">
-                            Model catalog failed to load: {catalogError.message}
+                            모델 카탈로그를 불러오지 못했습니다:{" "}
+                            {catalogError.message}
                         </Alert>
                     </div>
                 )}
@@ -2328,12 +2356,12 @@ export function Playground({
                         selectedModel &&
                         !currentModel && (
                             <Alert intent="warning">
-                                Your selected model is unavailable. Choose
-                                another model to continue.
+                                선택한 모델을 사용할 수 없습니다. 계속하려면
+                                다른 모델을 선택하세요.
                             </Alert>
                         )}
                     <section
-                        aria-label="Model details"
+                        aria-label="모델 정보"
                         className="@container flex min-w-0 flex-col gap-2"
                     >
                         <ModelPicker
@@ -2354,7 +2382,7 @@ export function Playground({
                                 )}
                                 <div className="flex flex-wrap items-center gap-2 text-xs">
                                     <RunStatBadge
-                                        label="Typical cost"
+                                        label="평균 비용"
                                         value={cost}
                                         walletKind={
                                             currentModel.paidOnly
@@ -2362,19 +2390,19 @@ export function Playground({
                                                 : "tier"
                                         }
                                         detail={
-                                            cost === "Free"
-                                                ? "This model is free to use."
-                                                : "Median cost of a successful paid request over the last 7 days. Your settings can change the price."
+                                            cost === "무료"
+                                                ? "무료로 쓸 수 있는 모델입니다."
+                                                : "최근 7일간 성공한 유료 요청의 중간값입니다. 설정에 따라 가격이 달라질 수 있습니다."
                                         }
                                         href={`${ENTER_URL}/models?${new URLSearchParams({ category: currentModel.category, q: currentModel.id })}`}
-                                        linkLabel="Pricing"
+                                        linkLabel="가격"
                                     />
                                     <RunStatBadge
-                                        label="Average time"
+                                        label="평균 시간"
                                         value={time}
-                                        detail="Average time to complete a successful request over the last 7 days."
+                                        detail="최근 7일간 성공한 요청의 평균 완료 시간입니다."
                                         href="https://model-monitor.pollinations.ai"
-                                        linkLabel="Model Monitor"
+                                        linkLabel="모델 모니터"
                                     />
                                 </div>
                             </>
@@ -2383,16 +2411,16 @@ export function Playground({
                     <Surface
                         as="section"
                         variant="card"
-                        aria-label="Generation inputs"
+                        aria-label="생성 입력"
                         className="@container/play-inputs flex flex-col gap-5"
                     >
                         <fieldset
-                            aria-label="Model input"
+                            aria-label="모델 입력"
                             className="flex min-w-0 flex-col gap-3"
                         >
                             {showPromptInput && (
                                 <FieldStack
-                                    label={isDecide ? "Context" : undefined}
+                                    label={isDecide ? "상황" : undefined}
                                     orientation={
                                         isDecide ? "inline" : "stacked"
                                     }
@@ -2405,7 +2433,7 @@ export function Playground({
                                     <Textarea
                                         aria-label={
                                             isAudioTranscription
-                                                ? "Instructions (optional)"
+                                                ? "지시사항 (선택)"
                                                 : promptLabel
                                         }
                                         value={prompt}
@@ -2446,7 +2474,7 @@ export function Playground({
                             {decision && (
                                 <>
                                     <OptionField
-                                        label="Question type"
+                                        label="질문 유형"
                                         options={decision.types}
                                         value={decision.type}
                                         onChange={(type) =>
@@ -2455,11 +2483,11 @@ export function Playground({
                                         format={questionTypeLabel}
                                     />
                                     <FieldStack
-                                        label="Question"
+                                        label="질문"
                                         orientation="inline"
                                     >
                                         <Input
-                                            aria-label="Question"
+                                            aria-label="질문"
                                             value={decision.instructions}
                                             onChange={(event) =>
                                                 setParam(
@@ -2491,8 +2519,8 @@ export function Playground({
                                 <fieldset
                                     aria-label={
                                         requiresImage
-                                            ? "Required image"
-                                            : "Reference images"
+                                            ? "필수 이미지"
+                                            : "참조 이미지"
                                     }
                                     className="flex min-w-0 flex-col gap-2"
                                 >
@@ -2503,16 +2531,16 @@ export function Playground({
                                             maxFiles={maxReferenceImages}
                                             {...uploadProps(
                                                 ["image"],
-                                                `Use up to ${maxReferenceImages === 1 ? "1 image" : `${maxReferenceImages} images`}.`,
+                                                `이미지는 최대 ${maxReferenceImages}장까지 사용할 수 있습니다.`,
                                             )}
-                                            label="Image"
+                                            label="이미지"
                                         />
                                         {maxReferenceImages > 1 &&
                                             referenceImages.length > 0 && (
                                                 <Text
                                                     size="xs"
                                                     tone="muted"
-                                                    aria-label={`${referenceImages.length} of ${maxReferenceImages} reference images`}
+                                                    aria-label={`참조 이미지 ${referenceImages.length}/${maxReferenceImages}`}
                                                 >
                                                     {referenceImages.length}/
                                                     {maxReferenceImages}
@@ -2528,7 +2556,7 @@ export function Playground({
                             {(supportsFrames ||
                                 videoReferenceMedia.length > 0) && (
                                 <fieldset
-                                    aria-label="Video references"
+                                    aria-label="비디오 참조"
                                     className="m-0 flex min-w-0 flex-col gap-2 border-0 p-0"
                                 >
                                     <div
@@ -2567,7 +2595,7 @@ export function Playground({
                                                         (media === "video" &&
                                                             recordingVideo)
                                                     }
-                                                    label={capitalize(media)}
+                                                    label={mediaLabel(media)}
                                                 />
                                             );
                                         })}
@@ -2610,7 +2638,7 @@ export function Playground({
 
                             {isStemSeparation && (
                                 <OptionField
-                                    label="Stems"
+                                    label="스템"
                                     options={["2", "6"]}
                                     value={
                                         stemVariationId === "two_stems_v1"
@@ -2624,13 +2652,13 @@ export function Playground({
                             )}
                             {transcription?.language && (
                                 <FieldStack
-                                    label="Language"
+                                    label="언어"
                                     orientation="inline"
                                     className="min-w-0"
                                 >
                                     <Input
                                         className="max-w-40"
-                                        placeholder="Auto (e.g. en)"
+                                        placeholder="자동 (예: ko)"
                                         value={language}
                                         onChange={(event) =>
                                             setParam(
@@ -2646,7 +2674,7 @@ export function Playground({
                                 <FieldStack
                                     label={
                                         <span className="font-normal">
-                                            Duration
+                                            길이
                                         </span>
                                     }
                                     orientation="inline"
@@ -2655,14 +2683,14 @@ export function Playground({
                                     <div className="flex min-w-0 items-center gap-2">
                                         <Input
                                             className="w-24 min-w-0"
-                                            aria-label="Duration in seconds"
+                                            aria-label="길이(초)"
                                             type="number"
                                             hideNumberSteppers
                                             min={0}
                                             step="any"
                                             placeholder={
                                                 currentModel.defaultDuration?.toString() ??
-                                                "Auto"
+                                                "자동"
                                             }
                                             value={audioLength}
                                             onChange={(event) =>
@@ -2678,7 +2706,7 @@ export function Playground({
                                             tone="muted"
                                             aria-hidden="true"
                                         >
-                                            seconds
+                                            초
                                         </Text>
                                     </div>
                                 </FieldStack>
@@ -2686,7 +2714,7 @@ export function Playground({
                             {isVisualModel && (
                                 <>
                                     <OptionField
-                                        label="Output format"
+                                        label="출력 형식"
                                         options={formatOptions}
                                         value={format ?? "still"}
                                         onChange={(value) =>
@@ -2698,7 +2726,7 @@ export function Playground({
                                         format={imageFormatLabel}
                                     />
                                     <OptionField
-                                        label="Resolution"
+                                        label="해상도"
                                         options={currentModel.resolutions}
                                         value={mediaSettings.resolution}
                                         onChange={(value) =>
@@ -2712,7 +2740,7 @@ export function Playground({
                                     {currentModel.category === "video" && (
                                         <>
                                             <OptionField
-                                                label="Aspect ratio"
+                                                label="화면 비율"
                                                 options={videoConfig.ratios}
                                                 value={videoAspectRatio}
                                                 onChange={(ratio) =>
@@ -2722,11 +2750,11 @@ export function Playground({
                                                     )
                                                 }
                                                 format={(ratio) =>
-                                                    ratio || "Auto"
+                                                    ratio || "자동"
                                                 }
                                             />
                                             <OptionField
-                                                label="Sound"
+                                                label="사운드"
                                                 options={
                                                     videoConfig.sound ===
                                                     "optional"
@@ -2741,8 +2769,8 @@ export function Playground({
                                                 }
                                                 format={(value) =>
                                                     value === "on"
-                                                        ? "On"
-                                                        : "Off"
+                                                        ? "켜기"
+                                                        : "끄기"
                                                 }
                                             />
                                         </>
@@ -2762,8 +2790,9 @@ export function Playground({
                                             className="min-w-0"
                                         >
                                             <Text size="sm" tone="muted">
-                                                Replicate chooses the duration.
-                                                Billing uses the output seconds.
+                                                Replicate가 길이를 정합니다.
+                                                과금은 출력된 초 수를 기준으로
+                                                합니다.
                                             </Text>
                                         </FieldStack>
                                     )}
@@ -2781,18 +2810,18 @@ export function Playground({
                                                 weight="semibold"
                                                 tone="strong"
                                             >
-                                                Dimensions
+                                                크기
                                             </Text>
                                             <div className="flex min-w-0 items-center gap-2">
                                                 {(
                                                     [
                                                         [
-                                                            "Width",
+                                                            "너비",
                                                             width,
                                                             "width",
                                                         ],
                                                         [
-                                                            "Height",
+                                                            "높이",
                                                             height,
                                                             "height",
                                                         ],
@@ -2812,13 +2841,13 @@ export function Playground({
                                                                 </span>
                                                             )}
                                                             <Input
-                                                                aria-label={`${label} in pixels`}
+                                                                aria-label={`${label}(픽셀)`}
                                                                 className="w-24 min-w-0 px-2"
                                                                 type="number"
                                                                 hideNumberSteppers
                                                                 min={1}
                                                                 step={1}
-                                                                placeholder="Auto"
+                                                                placeholder="자동"
                                                                 value={value}
                                                                 onChange={(
                                                                     event,
@@ -2847,11 +2876,11 @@ export function Playground({
                                     <FieldStack
                                         label={
                                             <span className="inline-flex items-center">
-                                                Seed
+                                                시드
                                                 <InfoTip
-                                                    label="About seed"
+                                                    label="시드 안내"
                                                     tapEnabled
-                                                    content="A positive integer up to 2,147,483,647 (10 digits). Controls generation randomness. Reusing a seed can help reproduce a result with the same model and inputs."
+                                                    content="2,147,483,647(10자리) 이하의 양의 정수입니다. 생성의 무작위성을 결정합니다. 같은 모델과 입력에서 시드를 재사용하면 결과를 재현하는 데 도움이 됩니다."
                                                 />
                                             </span>
                                         }
@@ -2859,14 +2888,14 @@ export function Playground({
                                         className="min-w-0"
                                     >
                                         <Input
-                                            aria-label="Seed"
+                                            aria-label="시드"
                                             className="max-w-40"
                                             type="number"
                                             hideNumberSteppers
                                             min={1}
                                             max={2147483647}
                                             step={1}
-                                            placeholder="Random"
+                                            placeholder="무작위"
                                             value={seed}
                                             onChange={(event) =>
                                                 setParam(
@@ -2936,7 +2965,7 @@ export function Playground({
                             {error && <Alert intent="danger">{error}</Alert>}
                             {authError && (
                                 <Alert intent="danger">
-                                    Could not connect your account:{" "}
+                                    계정을 연결하지 못했습니다:{" "}
                                     {authError.message}
                                 </Alert>
                             )}
@@ -2960,7 +2989,7 @@ export function Playground({
                             fields={apiFields}
                             pendingMessage={
                                 isDecide && !decisionRequest
-                                    ? "Complete the Decide form to see a copyable API request."
+                                    ? "판단 양식을 채우면 복사할 수 있는 API 요청이 표시됩니다."
                                     : undefined
                             }
                         />
@@ -2973,11 +3002,11 @@ export function Playground({
                                 intent="brand"
                                 icon={<GitHubIcon />}
                             >
-                                Sign in with GitHub
+                                GitHub로 로그인
                             </Button>
                         )}
                         <InlineLink href={`${API_BASE_URL}/docs`} tone="quiet">
-                            Read the API docs
+                            API 문서 보기
                         </InlineLink>
                     </div>
                 </div>

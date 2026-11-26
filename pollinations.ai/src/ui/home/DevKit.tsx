@@ -68,18 +68,18 @@ function Em({ children }: { children: ReactNode }) {
 // models, agents, tools.
 const BUILD_FEATURES: Feature[] = [
     {
-        title: "Agents",
+        title: "에이전트",
         catalogCount: "agents",
-        chips: ["Prompt + tools", "Code (agent.ts)", "Your own server"],
+        chips: ["프롬프트 + 도구", "코드 (agent.ts)", "내 서버"],
         body: (
             <>
-                <Em>Call an agent like a model</Em>, or build your own. We host
-                prompt and code agents.
+                <Em>에이전트를 모델처럼 호출</Em>하거나 직접 만드세요. 프롬프트
+                에이전트와 코드 에이전트를 호스팅합니다.
             </>
         ),
         links: [
             {
-                label: "Explore agents",
+                label: "에이전트 둘러보기",
                 href: "https://enter.pollinations.ai/agents",
             },
         ],
@@ -87,21 +87,21 @@ const BUILD_FEATURES: Feature[] = [
         color: "var(--polli-color-modality-audio)",
     },
     {
-        title: "Sandboxes",
-        chips: ["SSH", "VS Code", "E2B or Azure"],
+        title: "샌드박스",
+        chips: ["SSH", "VS Code", "E2B 또는 Azure"],
         body: (
             <>
-                <Em>A Linux computer in the cloud</Em> for you or your agents.
-                Paused sandboxes cost nothing.
+                나나 내 에이전트를 위한 <Em>클라우드 리눅스 컴퓨터</Em>.
+                일시정지된 샌드박스는 비용이 들지 않습니다.
             </>
         ),
         links: [
             {
-                label: "Open Sandboxes",
+                label: "샌드박스 열기",
                 href: "https://enter.pollinations.ai/sandboxes",
             },
             {
-                label: "Sandboxes guide",
+                label: "샌드박스 가이드",
                 href: "https://gen.pollinations.ai/docs#tag/sandboxes",
             },
         ],
@@ -109,16 +109,16 @@ const BUILD_FEATURES: Feature[] = [
         color: "var(--polli-color-modality-realtime)",
     },
     {
-        title: "Hosted MCP tools",
+        title: "호스팅 MCP 도구",
         body: (
             <>
-                <Em>A private computer, web search and connected apps</Em> like
-                Gmail. Use them in your agents or any MCP client.
+                Gmail 같은 <Em>연결된 앱, 웹 검색, 프라이빗 컴퓨터</Em>. 내
+                에이전트나 어떤 MCP 클라이언트에서든 사용하세요.
             </>
         ),
         links: [
             {
-                label: "Explore MCP servers",
+                label: "MCP 서버 둘러보기",
                 href: "https://enter.pollinations.ai/agents?view=mcp",
             },
         ],
@@ -128,21 +128,21 @@ const BUILD_FEATURES: Feature[] = [
     },
     {
         title: "Pollinations CLI",
-        note: "For humans, AI agents and everything in between",
+        note: "사람, AI 에이전트, 그 사이 모든 것을 위해",
         chips: ["npx @pollinations/cli"],
         body: (
             <>
-                <Em>Start with one of these tasks</Em>, then explore keys,
-                models, usage and earnings.
+                <Em>이 작업 중 하나로 시작</Em>한 뒤 키, 모델, 사용량, 수익을
+                살펴보세요.
             </>
         ),
         links: [
             {
-                label: "Connect OpenCode",
+                label: "OpenCode 연결",
                 href: "https://github.com/pollinations/pollinations/blob/main/packages/polli-cli/TASKS.md#connect-opencode",
             },
             {
-                label: "Generate an image",
+                label: "이미지 생성",
                 href: "https://github.com/pollinations/pollinations/blob/main/packages/polli-cli/TASKS.md#generate-an-image-from-the-terminal",
             },
         ],
@@ -150,24 +150,24 @@ const BUILD_FEATURES: Feature[] = [
         color: "var(--polli-color-modality-text)",
     },
     {
-        title: "Site hosting",
-        chips: ["Free", "Static"],
+        title: "사이트 호스팅",
+        chips: ["무료", "정적"],
         body: (
             <>
-                <Em>Host a site for free</Em> at{" "}
                 <span className="whitespace-nowrap">
                     your-name.pollinations.app
                 </span>
-                . Publish it from the CLI, SDK or an agent.
+                에서 <Em>사이트를 무료로 호스팅</Em>하세요. CLI, SDK,
+                에이전트에서 게시할 수 있습니다.
             </>
         ),
         links: [
             {
-                label: "Visit pollinations.app",
+                label: "pollinations.app 방문",
                 href: "https://pollinations.app",
             },
             {
-                label: "Sites guide",
+                label: "사이트 가이드",
                 href: "https://gen.pollinations.ai/docs#tag/sites",
             },
         ],
@@ -175,34 +175,34 @@ const BUILD_FEATURES: Feature[] = [
         color: "var(--polli-color-modality-embedding)",
     },
     {
-        title: "Users pay",
-        chips: ["BYOP", "Earnings"],
+        title: "사용자가 결제",
+        chips: ["BYOP", "수익"],
         body: (
             <>
-                With Pollinations Pay, users connect their accounts and set a
-                spending limit. <Em>They pay for their own usage.</Em>
+                Pollinations Pay를 쓰면 사용자가 계정을 연결하고 지출 한도를
+                정합니다. <Em>사용한 만큼 본인이 결제합니다.</Em>
             </>
         ),
         links: [
             {
-                label: "Integration guide",
+                label: "연동 가이드",
                 href: "https://gen.pollinations.ai/docs#tag/pollinations-pay",
             },
         ],
         icon: WalletIcon,
     },
     {
-        title: "Media storage",
-        chips: ["Images", "Audio", "Video"],
+        title: "미디어 저장소",
+        chips: ["이미지", "오디오", "영상"],
         body: (
             <>
-                <Em>Upload images, audio and video</Em> to get a link for model
-                calls. Generated files get one too.
+                <Em>이미지, 오디오, 영상을 업로드</Em>해 모델 호출에 쓸 링크를
+                받으세요. 생성된 파일도 링크를 받습니다.
             </>
         ),
         links: [
             {
-                label: "Storage guide",
+                label: "저장소 가이드",
                 href: "https://gen.pollinations.ai/docs#tag/media-storage",
             },
         ],
@@ -210,18 +210,18 @@ const BUILD_FEATURES: Feature[] = [
         color: "var(--polli-color-modality-image)",
     },
     {
-        title: "Safety checks",
-        chips: ["Privacy", "Secrets", "NSFW", "Prompt attacks"],
+        title: "안전 검사",
+        chips: ["개인정보", "비밀키", "NSFW", "프롬프트 공격"],
         body: (
             <>
-                <Em>Remove personal data and keys</Em>, or{" "}
-                <Em>block unsafe prompts</Em>, before they reach the model. Turn
-                checks on per request.
+                모델에 도달하기 전에 <Em>개인정보와 키를 제거</Em>하거나{" "}
+                <Em>안전하지 않은 프롬프트를 차단</Em>하세요. 요청마다 검사를 켤
+                수 있습니다.
             </>
         ),
         links: [
             {
-                label: "Safety guide",
+                label: "안전 가이드",
                 href: "https://gen.pollinations.ai/docs#tag/safety",
             },
         ],
@@ -237,38 +237,38 @@ const MODEL_KINDS: {
     /** Catalog categories; the first one is the enter filter and the color. */
     categories: ModelCategory[];
 }[] = [
-    { label: "Image", icon: ImageIcon, categories: ["image"] },
-    { label: "Text", icon: ChatIcon, categories: ["text", "decision"] },
-    { label: "Audio", icon: AudioIcon, categories: ["audio", "realtime"] },
-    { label: "Video & 3D", icon: VideoIcon, categories: ["video", "3d"] },
-    { label: "Embeddings", icon: SearchIcon, categories: ["embedding"] },
+    { label: "이미지", icon: ImageIcon, categories: ["image"] },
+    { label: "텍스트", icon: ChatIcon, categories: ["text", "decision"] },
+    { label: "오디오", icon: AudioIcon, categories: ["audio", "realtime"] },
+    { label: "영상 & 3D", icon: VideoIcon, categories: ["video", "3d"] },
+    { label: "임베딩", icon: SearchIcon, categories: ["embedding"] },
 ];
 
 const PUBLISH_FEATURES: Feature[] = [
     {
-        title: "List your app",
+        title: "앱 등록",
         body: (
             <>
-                Submit it for review to join the Apps catalog, then{" "}
-                <Em>turn on earnings</Em>.
+                검토를 위해 제출해 앱 카탈로그에 참여하고 <Em>수익을 켜세요</Em>
+                .
             </>
         ),
-        links: [{ label: "Submit your app", href: LINKS.githubSubmitApp }],
+        links: [{ label: "앱 제출하기", href: LINKS.githubSubmitApp }],
         icon: AppIcon,
         color: modalityTextColor("video"),
         tint: modalityBgVar("video"),
     },
     {
-        title: "Publish a model",
+        title: "모델 게시",
         body: (
             <>
-                Connect your endpoint and <Em>set your price</Em>. Each call
-                adds to your balance.
+                엔드포인트를 연결하고 <Em>가격을 설정</Em>하세요. 호출할 때마다
+                잔액이 늘어납니다.
             </>
         ),
         links: [
             {
-                label: "Add a model",
+                label: "모델 추가",
                 href: "https://enter.pollinations.ai/my-models?tab=models",
             },
         ],
@@ -277,15 +277,16 @@ const PUBLISH_FEATURES: Feature[] = [
         tint: modalityBgVar("text"),
     },
     {
-        title: "Publish an agent",
+        title: "에이전트 게시",
         body: (
             <>
-                Add your agent to the catalog so <Em>anyone can call it</Em>.
+                에이전트를 카탈로그에 추가해 <Em>누구나 호출</Em>할 수 있게
+                하세요.
             </>
         ),
         links: [
             {
-                label: "Create an agent",
+                label: "에이전트 만들기",
                 href: "https://enter.pollinations.ai/my-models",
             },
         ],
@@ -391,7 +392,7 @@ function Models() {
             background: modalityBgVar(categories[0]),
         })),
         {
-            label: "Community",
+            label: "커뮤니티",
             icon: SproutIcon,
             href: "https://enter.pollinations.ai/models?q=source:community",
             count: stats?.community ?? null,
@@ -404,8 +405,8 @@ function Models() {
 
     return (
         <FeatureGroup
-            title="Models"
-            description="From official providers and the community. Add yours too."
+            title="모델"
+            description="공식 제공자와 커뮤니티에서. 내 모델도 추가할 수 있습니다."
         >
             <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {cards.map(
@@ -449,7 +450,7 @@ function Models() {
                                                 className="font-semibold"
                                                 style={{ color }}
                                             >
-                                                Latest:
+                                                최신:
                                             </span>{" "}
                                             {names.slice(0, 2).join(" · ")}
                                         </>
@@ -469,7 +470,7 @@ function Models() {
                 }
                 className="self-start"
             >
-                Explore the API
+                API 둘러보기
             </ExternalLinkButton>
         </FeatureGroup>
     );
@@ -575,8 +576,8 @@ export function DevKit({ className }: { className?: string }) {
             <Models />
 
             <FeatureGroup
-                title="Pick the pieces you need."
-                description="Agents, sandboxes and tools, plus site hosting, storage, billing and safety."
+                title="필요한 조각을 고르세요."
+                description="에이전트, 샌드박스, 도구에 사이트 호스팅, 저장소, 결제, 안전까지."
             >
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     {BUILD_FEATURES.map((feature) => (
@@ -594,8 +595,8 @@ export function DevKit({ className }: { className?: string }) {
             </FeatureGroup>
 
             <FeatureGroup
-                title="Put your model, agent or app in front of our users."
-                description="You build it; we handle sign-in, billing and discovery. Publishing models and agents is in alpha and needs publisher access."
+                title="내 모델, 에이전트, 앱을 사용자에게 선보이세요."
+                description="만드는 건 당신이, 로그인·결제·발견은 저희가. 모델과 에이전트 게시는 알파 단계이며 게시자 권한이 필요합니다."
             >
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     {PUBLISH_FEATURES.map((feature) => (

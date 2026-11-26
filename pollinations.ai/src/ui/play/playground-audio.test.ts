@@ -295,7 +295,7 @@ describe("catalog-driven audio requests", () => {
         });
         expect(
             audioInputError(sfx, "footsteps", new File(["a"], "take.mp3")),
-        ).toContain("does not accept reference audio");
+        ).toContain("참조 오디오를 받지 않습니다");
     });
 
     it.each(["/v1/audio/voice-changer", "/v1/audio/voice-isolator"])(
@@ -343,7 +343,7 @@ describe("catalog-driven audio requests", () => {
         const send = vi.fn().mockResolvedValue(new Response(archive));
         vi.stubGlobal("fetch", send);
         const spec = model("/alpha/audio/stem-separation");
-        expect(audioInputError(spec, "")).toContain("Upload");
+        expect(audioInputError(spec, "")).toContain("올려 주세요");
         expect(audioInputError(spec, "", file)).toBeNull();
         const result = await generatePlaygroundAudio(client, spec, {
             prompt: "",
@@ -443,32 +443,32 @@ describe("catalog-driven audio requests", () => {
 
     it("reports missing or unsupported inputs", () => {
         expect(audioInputError(model("/v1/audio/voice-changer"), "")).toContain(
-            "Upload",
+            "먼저 오디오 파일",
         );
         expect(
             audioInputError(model("/v1/audio/transcriptions"), "", file),
         ).toBeNull();
         expect(audioInputError(model("/future/audio"), "", file)).toContain(
-            "not supported",
+            "지원하지 않습니다",
         );
         expect(
             audioInputError(model("/v1/audio/speech", ["text"]), "hello", file),
-        ).toContain("does not accept");
+        ).toContain("받지 않습니다");
         expect(
             audioInputError(
                 model("/v1/audio/speech", ["text", "audio"]),
                 "",
                 file,
             ),
-        ).toContain("Add text");
+        ).toContain("먼저 텍스트");
     });
 
     it("accepts a video only where the catalog lists video input", () => {
         const sfx = model("/v1/audio/speech", ["text", "video"]);
         expect(audioInputError(sfx, "footsteps", video)).toBeNull();
-        expect(audioInputError(sfx, "footsteps")).toContain("Upload a video");
+        expect(audioInputError(sfx, "footsteps")).toContain("먼저 비디오");
         expect(audioInputError(sfx, "footsteps", file)).toContain(
-            "does not accept reference audio",
+            "참조 오디오를 받지 않습니다",
         );
         expect(
             audioInputError(
@@ -476,7 +476,7 @@ describe("catalog-driven audio requests", () => {
                 "music",
                 video,
             ),
-        ).toContain("does not accept reference video");
+        ).toContain("참조 비디오를 받지 않습니다");
     });
 
     it("does not generate without the reference if its upload fails", async () => {
@@ -521,14 +521,14 @@ describe("catalog audio input constraints", () => {
     }
     it("checks clip duration, combined duration, and reference visuals independently", () => {
         expect(validate(2, 8)).toBeNull();
-        expect(validate(1, 3)).toContain("at least 2");
-        expect(validate(9, 2)).toContain("at most 8");
-        expect(validate(4, 7)).toContain("10 seconds of audio in total");
-        expect(validate(2, 3, false)).toContain("reference image or video");
+        expect(validate(1, 3)).toContain("2초 이상");
+        expect(validate(9, 2)).toContain("8초 이하");
+        expect(validate(4, 7)).toContain("전체 10초");
+        expect(validate(2, 3, false)).toContain("참조 이미지나 비디오");
     });
     it("waits for metadata and lets the API handle formats without a local preview", () => {
         expect(audioConstraintError(rules, files, new Map(), true)).toContain(
-            "Reading",
+            "읽는 중",
         );
         expect(validate(null, 8)).toBeNull();
         expect(audioConstraintError(rules, [], new Map(), false)).toBeNull();

@@ -27,15 +27,15 @@ import { DOCS_URL, SOCIAL } from "./links";
 import { useHideOnScroll, useScrolled } from "./useHideOnScroll";
 
 const NAV = [
-    { to: "/", label: "Hello" },
-    { to: "/play", label: "Play" },
-    { to: "/apps", label: "Apps" },
-    { to: "/community", label: "Community" },
+    { to: "/", label: "홈" },
+    { to: "/play", label: "플레이" },
+    { to: "/apps", label: "앱" },
+    { to: "/community", label: "커뮤니티" },
 ] as const;
 
 const LEGAL = [
-    { to: "/terms", label: "Terms" },
-    { to: "/privacy", label: "Privacy" },
+    { to: "/terms", label: "이용약관" },
+    { to: "/privacy", label: "개인정보" },
 ] as const;
 
 const [GITHUB, DISCORD, ...OTHER_SOCIAL] = SOCIAL;
@@ -43,10 +43,10 @@ const [GITHUB, DISCORD, ...OTHER_SOCIAL] = SOCIAL;
 // Docs is read beside the site, so it opens a new tab; Sign in moves you
 // into your account, so it stays in this one.
 const ACCOUNT_ACTIONS = [
-    { href: DOCS_URL, label: "Docs", Icon: BookIcon, external: true },
+    { href: DOCS_URL, label: "문서", Icon: BookIcon, external: true },
     {
         href: "https://enter.pollinations.ai",
-        label: "Sign in",
+        label: "로그인",
         Icon: LogInIcon,
         external: false,
     },
@@ -78,7 +78,7 @@ function MenuUtilities({
                 <span className="site-drawer-social-label">{GITHUB.label}</span>
                 {displayedRepoStars !== null && (
                     <Chip intent="neutral" size="sm">
-                        {displayedRepoStars} stars
+                        {displayedRepoStars} 스타
                     </Chip>
                 )}
             </DropdownItem>
@@ -91,7 +91,7 @@ function MenuUtilities({
                 aria-label={
                     discordOnline === null
                         ? "Discord"
-                        : `Discord: ${discordOnline.toLocaleString()} users online now`
+                        : `Discord: 지금 ${discordOnline.toLocaleString()}명 온라인`
                 }
                 className="site-drawer-social-link"
             >
@@ -101,7 +101,7 @@ function MenuUtilities({
                 </span>
                 {discordOnline !== null && (
                     <SocialCount as="span" network="discord" showIcon={false}>
-                        {formatCount(discordOnline)} online
+                        {formatCount(discordOnline)} 온라인
                         <LiveDot />
                     </SocialCount>
                 )}
@@ -130,7 +130,7 @@ function GitHubStarsButton({ stars }: { stars: number | null }) {
     if (stars === null) return null;
 
     const displayedStars = formatCount(stars);
-    const label = `Star us on GitHub (${stars.toLocaleString()} stars)`;
+    const label = `GitHub에서 별 주기 (${stars.toLocaleString()}개)`;
 
     return (
         <SocialCount
@@ -150,7 +150,7 @@ function GitHubStarsButton({ stars }: { stars: number | null }) {
 function DiscordLiveButton({ online }: { online: number | null }) {
     if (online === null) return null;
 
-    const label = `Join the Discord (${online.toLocaleString()} users online now)`;
+    const label = `Discord 참여하기 (지금 ${online.toLocaleString()}명 온라인)`;
 
     return (
         <SocialCount
@@ -161,7 +161,7 @@ function DiscordLiveButton({ online }: { online: number | null }) {
             aria-label={label}
             title={label}
         >
-            {formatCount(online)} online
+            {formatCount(online)} 온라인
             <LiveDot />
         </SocialCount>
     );
@@ -202,7 +202,7 @@ export function SiteHeader() {
                         <Link
                             to="/"
                             className="site-home-logo hidden items-center rounded-md text-theme-text-strong transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-theme-border min-[880px]:flex motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-                            aria-label="pollinations.ai home"
+                            aria-label="pollinations.ai 홈"
                         >
                             <BrandMark className="size-8" />
                         </Link>
@@ -250,7 +250,7 @@ export function SiteHeader() {
                             <ColorModeToggle />
                         </div>
                         <Button
-                            aria-label="Open menu"
+                            aria-label="메뉴 열기"
                             aria-expanded={mobileMenuOpen}
                             aria-controls="mobile-site-menu"
                             onClick={() => setMobileMenuOpen(true)}
@@ -263,7 +263,7 @@ export function SiteHeader() {
                         <Drawer
                             open={mobileMenuOpen}
                             onOpenChange={setMobileMenuOpen}
-                            ariaLabel="Site navigation"
+                            ariaLabel="사이트 내비게이션"
                             side="right"
                             contentClassName="w-[min(18.75rem,78vw)]"
                         >
@@ -274,7 +274,7 @@ export function SiteHeader() {
                                 <Link
                                     to="/"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    aria-label="pollinations.ai home"
+                                    aria-label="pollinations.ai 홈"
                                     className="flex shrink-0 px-2"
                                 >
                                     <img

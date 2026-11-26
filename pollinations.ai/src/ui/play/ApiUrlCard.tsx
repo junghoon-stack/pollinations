@@ -71,11 +71,11 @@ export function ApiUrlCard({
     const example = apiExample(url, fields);
 
     return (
-        <section aria-label="API quickstart" className="mt-6 min-w-0 space-y-3">
+        <section aria-label="API 빠른 시작" className="mt-6 min-w-0 space-y-3">
             <div className="flex flex-col gap-1">
-                <Eyebrow>For developers</Eyebrow>
+                <Eyebrow>개발자용</Eyebrow>
                 <Heading as="h2" size="card">
-                    Use it from the API
+                    API로 사용하기
                 </Heading>
             </div>
             {pendingMessage ? (
@@ -90,7 +90,7 @@ export function ApiUrlCard({
             ) : (
                 <CopyButton
                     value={example}
-                    aria-label="Copy API example"
+                    aria-label="API 예제 복사"
                     className="polli-surface-card relative block w-full min-w-0 select-none rounded-card bg-surface-opaque min-h-16 p-3.5 pr-16 text-left transition-colors hover:bg-surface-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-theme-text-soft sm:p-4 sm:pr-16"
                 >
                     {(copied) => (

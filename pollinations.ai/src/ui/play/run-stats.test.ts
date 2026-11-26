@@ -10,16 +10,16 @@ describe("model stat badges", () => {
     });
 
     it("rounds response times to whole seconds", () => {
-        expect(formatRunTime(100)).toBe("1s");
-        expect(formatRunTime(3000)).toBe("3s");
-        expect(formatRunTime(41400)).toBe("41s");
+        expect(formatRunTime(100)).toBe("1초");
+        expect(formatRunTime(3000)).toBe("3초");
+        expect(formatRunTime(41400)).toBe("41초");
     });
 
     it("drops zero seconds from whole minutes", () => {
-        expect(formatRunTime(59999)).toBe("1m");
-        expect(formatRunTime(100000)).toBe("1m 40s");
-        expect(formatRunTime(120000)).toBe("2m");
-        expect(formatRunTime(121000)).toBe("2m 1s");
+        expect(formatRunTime(59999)).toBe("1분");
+        expect(formatRunTime(100000)).toBe("1분 40초");
+        expect(formatRunTime(120000)).toBe("2분");
+        expect(formatRunTime(121000)).toBe("2분 1초");
     });
 
     it("omits unavailable measurements", () => {

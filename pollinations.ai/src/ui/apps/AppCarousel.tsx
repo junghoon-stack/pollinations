@@ -35,7 +35,7 @@ export function SpotlightCarousel({ apps }: { apps: DirectoryApp[] }) {
 
     return (
         <section
-            aria-label="Featured apps"
+            aria-label="추천 앱"
             aria-roledescription="carousel"
             className="min-w-0 overflow-hidden"
             onMouseEnter={() => setPaused(true)}
@@ -58,7 +58,7 @@ export function SpotlightCarousel({ apps }: { apps: DirectoryApp[] }) {
                             <Button
                                 size="icon"
                                 intent="neutral"
-                                aria-label="Previous featured app"
+                                aria-label="이전 추천 앱"
                                 onClick={() => move(-1)}
                             >
                                 <ArrowRightIcon className="size-4 rotate-180" />
@@ -66,7 +66,7 @@ export function SpotlightCarousel({ apps }: { apps: DirectoryApp[] }) {
                             <Button
                                 size="icon"
                                 intent="neutral"
-                                aria-label="Next featured app"
+                                aria-label="다음 추천 앱"
                                 onClick={() => move(1)}
                             >
                                 <ArrowRightIcon className="size-4" />
@@ -128,7 +128,7 @@ export function AppCarousel({ apps }: { apps: DirectoryApp[] }) {
     return (
         <section
             aria-roledescription="carousel"
-            aria-label="Apps built on Pollinations"
+            aria-label="Pollinations로 만든 앱"
             className="flex min-w-0 flex-col gap-3"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
@@ -203,7 +203,7 @@ export function AppCarousel({ apps }: { apps: DirectoryApp[] }) {
                                 }
                                 aria-label={
                                     copy === 0
-                                        ? `${index + 1} of ${apps.length}`
+                                        ? `${apps.length}개 중 ${index + 1}번째`
                                         : undefined
                                 }
                                 className="w-59 shrink-0"

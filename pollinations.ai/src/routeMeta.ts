@@ -2,46 +2,46 @@ type RouteMeta = { title: string; description: string };
 
 export const ROUTE_META: Record<string, RouteMeta> = {
     "/": {
-        title: "Pollinations.ai | Open infrastructure for AI-natives. Models. Agents. Tools. One API.",
+        title: "Pollinations.ai | AI 네이티브를 위한 오픈 인프라. 모델. 에이전트. 도구. 하나의 API.",
         description:
-            "The AI-native builder community. Generate images, video, speech, music and text. Build agents and apps.",
+            "AI 네이티브 빌더 커뮤니티. 이미지, 영상, 음성, 음악, 텍스트를 생성하고 에이전트와 앱을 만드세요.",
     },
     "/play": {
-        title: "Play | pollinations.ai",
+        title: "플레이 | pollinations.ai",
         description:
-            "Chat with agents or generate images, video and audio in your browser using your own balance.",
+            "브라우저에서 에이전트와 대화하거나 내 잔액으로 이미지, 영상, 오디오를 생성하세요.",
     },
     "/apps": {
-        title: "Apps | pollinations.ai",
+        title: "앱 | pollinations.ai",
         description:
-            "Discover apps listed by the Pollinations community, from creative experiments to tools used at scale.",
+            "창의적인 실험부터 대규모로 쓰이는 도구까지, Pollinations 커뮤니티가 등록한 앱을 만나보세요.",
     },
     "/community": {
-        title: "Community | pollinations.ai",
+        title: "커뮤니티 | pollinations.ai",
         description:
-            "Contribute to Pollinations, vote on ideas and meet the builders.",
+            "Pollinations에 기여하고, 아이디어에 투표하고, 빌더들을 만나보세요.",
     },
     "/terms": {
-        title: "Terms | pollinations.ai",
-        description: "Terms of service for pollinations.ai",
+        title: "이용약관 | pollinations.ai",
+        description: "pollinations.ai 이용약관",
     },
     "/privacy": {
-        title: "Privacy | pollinations.ai",
-        description: "Privacy policy for pollinations.ai",
+        title: "개인정보 | pollinations.ai",
+        description: "pollinations.ai 개인정보 처리방침",
     },
     "/subprocessors": {
-        title: "Service Providers | pollinations.ai",
-        description: "Pollinations.ai service providers",
+        title: "서비스 제공자 | pollinations.ai",
+        description: "pollinations.ai 서비스 제공자",
     },
     "/refunds": {
-        title: "Refunds | pollinations.ai",
-        description: "Refunds and cancellations policy for pollinations.ai",
+        title: "환불 | pollinations.ai",
+        description: "pollinations.ai 환불 및 취소 정책",
     },
 };
 
 export const NOT_FOUND_META: RouteMeta = {
-    title: "Page not found | pollinations.ai",
-    description: "The requested page could not be found.",
+    title: "페이지를 찾을 수 없습니다 | pollinations.ai",
+    description: "요청하신 페이지를 찾을 수 없습니다.",
 };
 
 // The known page a URL path shows, or undefined for the 404 page. The router

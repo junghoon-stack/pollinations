@@ -7,7 +7,7 @@ export const Route = createFileRoute("/privacy")({
     component: () => (
         <LegalPage
             markdownPath="/legal/PRIVACY_POLICY.md"
-            errorLabel="privacy policy"
+            errorLabel="개인정보 처리방침"
         />
     ),
 });

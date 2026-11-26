@@ -1,7 +1,7 @@
 import type { DecisionAnswer } from "@pollinations/sdk";
 import { Surface, Text } from "@pollinations/ui";
 
-const percent = new Intl.NumberFormat("en", {
+const percent = new Intl.NumberFormat("ko-KR", {
     style: "percent",
     maximumFractionDigits: 1,
 });
@@ -15,18 +15,18 @@ export function DecisionAnswerPanel({
 }) {
     const probabilities =
         answer.type === "noul"
-            ? { Yes: answer.noul, No: 1 - answer.noul }
+            ? { 예: answer.noul, 아니요: 1 - answer.noul }
             : answer.probabilities;
     return (
         <Surface
             variant="card"
             className="flex w-full max-w-xl flex-col gap-3"
-            aria-label="Decision result"
+            aria-label="판단 결과"
         >
             <Text weight="semibold">{question}</Text>
-            {answer.type === "choice" && <Text>Selected: {answer.choice}</Text>}
+            {answer.type === "choice" && <Text>선택: {answer.choice}</Text>}
             {answer.type === "score" && (
-                <Text>Score: {Number(answer.score.toFixed(2))}</Text>
+                <Text>점수: {Number(answer.score.toFixed(2))}</Text>
             )}
             <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-2">
                 {Object.entries(probabilities).map(([key, probability]) => (

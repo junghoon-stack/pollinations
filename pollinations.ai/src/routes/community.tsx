@@ -44,41 +44,41 @@ export const Route = createFileRoute("/community")({
 /** Four ways to contribute, from publishing work to shaping the platform. */
 const WAYS_IN = [
     {
-        label: "Apps",
+        label: "앱",
         icon: AppIcon,
-        title: "List your app",
-        body: "Share what you built, get feedback, and help users discover it.",
+        title: "내 앱 등록",
+        body: "만든 것을 공유하고 피드백을 받아 사용자가 발견하게 하세요.",
         cta: {
-            label: "List your app",
+            label: "앱 등록",
             href: LINKS.githubSubmitApp,
         },
     },
     {
-        label: "Models & agents",
+        label: "모델 & 에이전트",
         icon: BeakerIcon,
-        title: "Publish a model or agent",
-        body: "Bring your own model or managed agent to the public catalog and make it available to builders.",
+        title: "모델이나 에이전트 게시",
+        body: "내 모델이나 관리형 에이전트를 공개 카탈로그에 올려 빌더들이 쓸 수 있게 하세요.",
         cta: {
-            label: "Request access",
+            label: "액세스 요청",
             href: "https://github.com/pollinations/pollinations/issues/new?template=community-model-allowlist.yml",
         },
     },
     {
-        label: "Code",
+        label: "코드",
         icon: CodeIcon,
-        title: "Improve code and docs",
-        body: "Fix a bug, propose a feature, improve an example, or open a pull request.",
+        title: "코드와 문서 개선",
+        body: "버그를 고치고, 기능을 제안하고, 예제를 다듬거나 풀 리퀘스트를 여세요.",
         cta: {
-            label: "Find a GitHub Quest",
+            label: "GitHub 퀘스트 찾기",
             href: "https://enter.pollinations.ai/quests",
         },
     },
     {
-        label: "Talk",
+        label: "대화",
         icon: MegaphoneIcon,
-        title: "Help in Discord",
-        body: "Answer questions, share experiments, and tell the team what feels missing.",
-        cta: { label: "Join the Discord", href: SOCIAL_LINKS.discord.url },
+        title: "Discord에서 돕기",
+        body: "질문에 답하고 실험을 공유하고, 팀에 부족한 점을 알려주세요.",
+        cta: { label: "Discord 참여하기", href: SOCIAL_LINKS.discord.url },
     },
 ];
 
@@ -96,14 +96,14 @@ function FeedState({
     return (
         <EmptyState>
             {failed
-                ? `${what} couldn’t be loaded right now.`
-                : `No ${what.toLowerCase()} yet.`}
+                ? `${what}을(를) 지금 불러올 수 없습니다.`
+                : `아직 ${what}이(가) 없습니다.`}
         </EmptyState>
     );
 }
 
 // Only the Discord count is "right now"; the other metrics are totals.
-const LIVE_METRIC = "online in Discord";
+const LIVE_METRIC = "Discord 온라인";
 
 /** A live count hides when its feed fails and shows a skeleton while loading. */
 function liveMetric<T>(
@@ -127,11 +127,11 @@ function CommunityParticipation() {
     const platform = usePlatformStats();
     const apps = useAppDirectory();
     const ways = [
-        liveMetric("listed apps", { ...apps, data: apps.data.length }, String),
-        liveMetric("community models and agents", platform, (stats) =>
+        liveMetric("등록된 앱", { ...apps, data: apps.data.length }, String),
+        liveMetric("커뮤니티 모델과 에이전트", platform, (stats) =>
             formatCount(stats.community + stats.agents),
         ),
-        liveMetric("PRs merged", pullRequests, formatCount),
+        liveMetric("머지된 PR", pullRequests, formatCount),
         // The widget only exposes who is online now; a member total needs
         // a bot token, so this is the one live number the card can show.
         liveMetric(LIVE_METRIC, online, formatCount),
@@ -141,15 +141,13 @@ function CommunityParticipation() {
         <>
             <HeroScene page="community">
                 <ContentHeader
-                    eyebrow="Open source, open roadmap"
-                    title="Community"
+                    eyebrow="오픈 소스, 오픈 로드맵"
+                    title="커뮤니티"
                     subtitle={
                         <>
-                            <strong>
-                                Builders shape the platform directly.
-                            </strong>{" "}
-                            Share what you need, meet the people already using
-                            it, and help decide what comes next.
+                            <strong>빌더가 플랫폼을 직접 만듭니다.</strong>{" "}
+                            필요한 것을 공유하고, 이미 쓰고 있는 사람들을
+                            만나고, 다음 단계를 함께 정하세요.
                         </>
                     }
                     variant="page"
@@ -165,9 +163,9 @@ function CommunityParticipation() {
                 )}
             >
                 <ContentHeader
-                    eyebrow="Get involved"
-                    title="Help shape Pollinations"
-                    subtitle="Share your work, contribute, or help decide what we build next."
+                    eyebrow="참여하기"
+                    title="Pollinations를 함께 만들어요"
+                    subtitle="작업을 공유하고, 기여하고, 다음에 무엇을 만들지 함께 정하세요."
                 />
                 <div className="grid grid-cols-1 gap-5 min-[900px]:grid-cols-2 xl:grid-cols-4">
                     {ways.map((way) => {
@@ -244,7 +242,7 @@ function CommunityParticipation() {
                             <FeedState
                                 loading={loading}
                                 failed={failed}
-                                what="Open votes"
+                                what="열린 투표"
                             />
                         ) : (
                             <div className="flex flex-col gap-4">
@@ -252,7 +250,7 @@ function CommunityParticipation() {
                                     <InlineLink
                                         key={issue.number}
                                         href={issue.url}
-                                        aria-label={`Open “${issue.title}” and add your vote`}
+                                        aria-label={`“${issue.title}” 열고 투표하기`}
                                         className="flex w-fit max-w-full items-center gap-2"
                                     >
                                         <MegaphoneIcon
@@ -264,10 +262,7 @@ function CommunityParticipation() {
                                                 {issue.title}
                                             </span>
                                             <span className="whitespace-nowrap text-xs text-theme-text-muted tabular-nums">
-                                                {issue.reactions} reaction
-                                                {issue.reactions === 1
-                                                    ? ""
-                                                    : "s"}
+                                                반응 {issue.reactions}개
                                             </span>
                                         </span>
                                     </InlineLink>
@@ -280,7 +275,7 @@ function CommunityParticipation() {
                         size="sm"
                         tone="quiet"
                     >
-                        Suggest an idea
+                        아이디어 제안하기
                     </InlineLink>
                 </div>
                 <img
@@ -307,21 +302,17 @@ function Contributors() {
     return (
         <section className="flex flex-col gap-5">
             <ContentHeader
-                eyebrow="Contributors"
-                title="Top code contributors"
-                subtitle="The top 20 by pull requests merged in the last 6 months, people and agents alike. Want to join them?"
+                eyebrow="기여자"
+                title="상위 코드 기여자"
+                subtitle="최근 6개월 동안 머지된 풀 리퀘스트 기준 상위 20명. 사람과 에이전트 모두 포함합니다. 함께하고 싶나요?"
                 action={
                     <InlineLink href={SOCIAL_LINKS.github.url}>
-                        Open the repository
+                        저장소 열기
                     </InlineLink>
                 }
             />
             {people.length === 0 && (
-                <FeedState
-                    loading={loading}
-                    failed={failed}
-                    what="Contributors"
-                />
+                <FeedState loading={loading} failed={failed} what="기여자" />
             )}
             <div className="grid grid-cols-[repeat(auto-fit,minmax(min(190px,100%),1fr))] gap-3.5">
                 {people.map((person) => (
@@ -347,12 +338,12 @@ function Contributors() {
                                 </span>
                                 {person.login.endsWith("[bot]") && (
                                     <Chip intent="neutral" size="sm">
-                                        Agent
+                                        에이전트
                                     </Chip>
                                 )}
                             </span>
                             <span className="text-xs text-theme-text-muted tabular-nums">
-                                {formatCount(person.prs)} merged PRs
+                                머지된 PR {formatCount(person.prs)}개
                             </span>
                         </span>
                     </LinkCard>
@@ -373,9 +364,9 @@ function CommunityPage() {
 
             <section className="flex flex-col gap-5">
                 <ContentHeader
-                    eyebrow="Supporters"
-                    title="Who keeps the GPUs warm"
-                    subtitle="Their credits and infrastructure help keep Pollinations running."
+                    eyebrow="서포터"
+                    title="GPU를 따뜻하게 유지하는 사람들"
+                    subtitle="이들의 크레딧과 인프라가 Pollinations를 계속 운영하게 합니다."
                 />
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
                     {SUPPORTERS.map((supporter) => (
@@ -400,15 +391,15 @@ function CommunityPage() {
 
             <Callout
                 tone="dark"
-                title="Join the conversation"
-                body="Builders are in there swapping prompts, debugging each other's apps, and telling us what to build next."
+                title="대화에 참여하세요"
+                body="빌더들이 프롬프트를 나누고, 서로의 앱을 디버깅하고, 다음에 무엇을 만들지 알려줍니다."
             >
                 <ExternalLinkButton
                     href={SOCIAL_LINKS.discord.url}
                     intent="brand"
                     size="lg"
                 >
-                    Join the Discord
+                    Discord 참여하기
                 </ExternalLinkButton>
             </Callout>
             <BottomScene page="community" />

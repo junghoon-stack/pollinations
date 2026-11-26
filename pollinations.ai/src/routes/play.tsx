@@ -86,7 +86,7 @@ function HydratedPlayground({ connect }: ConnectProps) {
             <>
                 {restoreError && (
                     <Alert intent="warning">
-                        Couldn’t restore the files saved before sign-in.
+                        로그인 전에 저장한 파일을 복원하지 못했습니다.
                     </Alert>
                 )}
                 <Playground connectRef={connect} drafts={drafts} />
@@ -102,16 +102,16 @@ function PlayHero({ connect }: ConnectProps) {
         // The monitor robot, showing off something it just made.
         <HeroScene page="play" compactBottom>
             <ContentHeader
-                eyebrow="Models in the browser"
-                title="Try it out."
-                subtitle="Create images, video and audio with your own balance."
+                eyebrow="브라우저 속 모델"
+                title="직접 써 보세요."
+                subtitle="내 잔액으로 이미지, 비디오, 오디오를 만들어 보세요."
                 variant="page"
             />
             <div className="self-start" inert={!isHydrated}>
                 <AppUserMenu
                     connectSize="lg"
                     onConnect={() => (connect.current ?? login)()}
-                    labels={{ logout: "Disconnect app" }}
+                    labels={{ logout: "앱 연결 해제" }}
                 />
             </div>
         </HeroScene>

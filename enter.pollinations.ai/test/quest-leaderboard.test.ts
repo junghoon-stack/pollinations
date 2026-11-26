@@ -215,7 +215,7 @@ test("visitors read the scheduled leaderboard copy until the next run", async ()
 
 test("rendered leaderboard shows its heading and CTA while loading", () => {
     const html = renderToStaticMarkup(createElement(QuestLeaderboard));
-    expect(html).toContain("Quest leaderboard");
+    expect(html).toContain("퀘스트 리더보드");
     expect(html).toContain('href="https://enter.pollinations.ai/quests"');
     expect(html).toContain('aria-busy="true"');
 });

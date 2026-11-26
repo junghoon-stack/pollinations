@@ -7,7 +7,7 @@ export const Route = createFileRoute("/terms")({
     component: () => (
         <LegalPage
             markdownPath="/legal/TERMS_OF_SERVICE.md"
-            errorLabel="terms of service"
+            errorLabel="서비스 이용약관"
         />
     ),
 });

@@ -17,7 +17,7 @@ export function DecisionCriteriaFields({
     onChange: (values: string[]) => void;
 }) {
     const isScale = type === "score";
-    const item = isScale ? "level" : "choice";
+    const item = isScale ? "단계" : "선택지";
 
     return (
         <FieldStack
@@ -26,20 +26,20 @@ export function DecisionCriteriaFields({
             label={
                 isScale ? (
                     <>
-                        Scale{" "}
+                        척도{" "}
                         <span className="text-xs font-normal text-theme-text-muted">
-                            (low to high)
+                            (낮음 → 높음)
                         </span>
                     </>
                 ) : (
-                    "Choices"
+                    "선택지"
                 )
             }
         >
             <div className="flex min-w-0 flex-col items-start gap-2">
                 {values.map((value, index) => {
                     // Each input represents an editable slot in the ordered list.
-                    const label = `${isScale ? "Scale level" : "Choice"} ${index + 1}`;
+                    const label = `${isScale ? "단계" : "선택지"} ${index + 1}`;
                     return (
                         <div
                             key={label}
@@ -58,7 +58,7 @@ export function DecisionCriteriaFields({
                             {values.length > 2 && (
                                 <IconButton
                                     variant="ghost"
-                                    aria-label={`Remove ${item} ${index + 1}`}
+                                    aria-label={`${item} ${index + 1} 삭제`}
                                     onClick={() =>
                                         onChange(
                                             values.filter(
@@ -79,7 +79,7 @@ export function DecisionCriteriaFields({
                     icon={<PlusIcon />}
                     onClick={() => onChange([...values, ""])}
                 >
-                    Add {item}
+                    {item} 추가
                 </Button>
             </div>
         </FieldStack>
